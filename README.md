@@ -6,11 +6,12 @@ Working locally: clone this repo. It is public and free. Status below is the sou
 
 ## Status (2026-08-28)
 
-Ready to teach **week 1** only.
+Ready to teach **weeks 1–2** (content). Classroom week 1 pack is complete; week 2 post is in, quiz/slides in flight.
 
 - Course map v2: 12 modules = 12 book chapters
 - Lektion 1.1 v2 (stötväg ombord / STENA GERMANICA)
 - Kapitel 1 + figure 1.1
+- Kapitel 2 + figure 2.1
 - Lektion 2.1 locked (isolering / SMS)
 - Lab-day proposal v2 (shipyard, not live-wire)
 - KDP print specs (7.00×10.00 in, black ink, white paper, amazon.se, KDP Select off)
