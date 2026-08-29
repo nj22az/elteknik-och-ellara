@@ -133,6 +133,25 @@
     {"label": "Classroom prov", "path": "kurs/lararhandledning/classroom-v-prov-vecka9.md"}
   ];
 
+  var PROGRESS_KEY = "elteknik-progress";
+  var STEP_ORDER = ["lektion", "bok", "slides", "quiz", "classroom"];
+  var STEP_NAME = { lektion: "Lektion", bok: "Bokkapitel", slides: "Bildspel", quiz: "Quiz", classroom: "Classroom-uppgift" };
+  var MODULES = [
+    { hub: "1", cal: "1", m: "m1", name: "Elsäkerhet och stötar", chap: "Elsäkerhet, stötar" },
+    { hub: "2", cal: "2", m: "m2", name: "Isolering före arbete", chap: "Isolering före arbete" },
+    { hub: "3", cal: "3", m: "m3", name: "Resistiv DC", chap: "Resistiv DC" },
+    { hub: "4", cal: "4", m: "m4", name: "Enfas AC", chap: "Enfas AC" },
+    { hub: "5", cal: "5", m: "m5", name: "Trefas", chap: "Trefas, spänningstyper" },
+    { hub: "6", cal: "6", m: "m6", name: "Maskiner", chap: "Maskiner" },
+    { hub: "7", cal: "7", m: "m7", name: "Eltavla", chap: "Eltavla" },
+    { hub: "7b", cal: "7", m: "m8", name: "Verktyg", chap: "Verktyg" },
+    { hub: "8", cal: "8", m: "m9", name: "Ritningar", chap: "Ritningar" },
+    { hub: "8b", cal: "8", m: "m10", name: "Hållkrets", chap: "Hållkrets" },
+    { hub: "9", cal: "9", m: "m11", name: "Elarbete, IP, intyg", chap: "Elarbete, IP, intyg" },
+    { hub: "9b", cal: "9", m: "m12", name: "Felsökning", chap: "Felsökning" }
+  ];
+  var CAL_IDS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  var HUB_IDS = ["1", "2", "3", "4", "5", "6", "7", "7b", "8", "8b", "9", "9b"];
   function byId(id) { return document.getElementById(id); }
   function toHex(buf) {
     return Array.from(new Uint8Array(buf)).map(function (b) {
@@ -151,11 +170,15 @@
   function okPath(path) {
     if (!path || hasFacit(path)) return false;
     if (path.indexOf("..") !== -1) return false;
-    if (!/\.md$/i.test(path)) return false;
-    return path.indexOf("kurs/") === 0 || path.indexOf("bok/") === 0;
+    if (path.slice(-3).toLowerCase() !== ".md") return false;
+    if (path.indexOf("kurs/") !== 0 && path.indexOf("bok/") !== 0) return false;
+    if (path === "bok/kapitellista-v2.md") return true;
+    return !!findItem(path);
   }
   function hashPath() {
-    return decodeURIComponent((location.hash || "").replace(/^#\/?/, "")).trim();
+    var raw = (location.hash || "").replace(/^#\/?/, "");
+    try { return decodeURIComponent(raw).trim(); }
+    catch (e) { return raw.trim(); }
   }
   function resolveRel(baseDir, rel) {
     var parts = (baseDir + "/" + rel).split("/");
@@ -176,6 +199,61 @@
       return "![" + alt + "](" + resolveRel(dir, src) + ")";
     });
   }
+  function stripFacit(md) {
+    var s = String(md || "");
+    var m = s.match(/^## Facit/im);
+    if (!m) return s.trim();
+    return s.slice(0, m.index).trim();
+  }
+  function scrubHtml(html) {
+    return String(html || "").replace(/href=("|')[^"']*facit[^"']*("|')/gi, "href=\"#/\"");
+  }
+  function mdHtml(md, path) {
+    var src = rewriteMd(md, path || "");
+    var html = (typeof marked !== "undefined" && marked.parse) ? marked.parse(src) : src;
+    return scrubHtml(html);
+  }
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  function getProgress() {
+    try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}") || {}; }
+    catch (e) { return {}; }
+  }
+  function markVisited(path) {
+    if (!path) return;
+    var p = getProgress();
+    p[path] = 1;
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
+  }
+  function isVisited(path) { return !!getProgress()[path]; }
+  function classify(item) {
+    var p = item && item.path ? item.path : "";
+    if (p.indexOf("/lektioner/") !== -1) return "lektion";
+    if (p.indexOf("bok/") === 0) return "bok";
+    if (p.indexOf("-slides.md") !== -1) return "slides";
+    if (p.indexOf("-quiz.md") !== -1) return "quiz";
+    if (p.indexOf("classroom-") !== -1) return "classroom";
+    return "other";
+  }
+  function orderedSteps(week) {
+    var by = {};
+    (week.items || []).forEach(function (it) { by[classify(it)] = it; });
+    return STEP_ORDER.map(function (k) { return by[k]; }).filter(Boolean);
+  }
+  function hubIndex(hub) {
+    for (var i = 0; i < MODULES.length; i++) if (MODULES[i].hub === hub) return i;
+    return -1;
+  }
+  function calHubs(cal) {
+    var out = [];
+    for (var i = 0; i < MODULES.length; i++) if (MODULES[i].cal === String(cal)) out.push(MODULES[i].hub);
+    return out;
+  }
   function findItem(path) {
     var i, j;
     for (i = 0; i < WEEKS.length; i++) {
@@ -188,85 +266,478 @@
     }
     return null;
   }
-  function renderNav() {
-    var nav = byId("nav");
-    var path = hashPath();
-    var html = "";
-    html += "<a href=\"#/\"" + (!path ? " class=\"active\"" : "") + ">Start</a>";
-    for (var i = 0; i < WEEKS.length; i++) {
-      var w = WEEKS[i];
-      html += "<details open><summary>" + w.title + "</summary><div class=\"week-links\">";
-      for (var j = 0; j < w.items.length; j++) {
-        var it = w.items[j];
-        var cls = it.path === path ? " class=\"active\"" : "";
-        html += "<a href=\"#/" + it.path + "\"" + cls + ">" + it.label + "</a>";
+  function locatePath(path) {
+    var i, j, steps;
+    for (i = 0; i < WEEKS.length; i++) {
+      steps = orderedSteps(WEEKS[i]);
+      for (j = 0; j < steps.length; j++) {
+        if (steps[j].path === path) {
+          return { weekIdx: i, step: j + 1, total: steps.length, item: steps[j], mod: MODULES[i], steps: steps };
+        }
       }
-      html += "</div></details>";
     }
-    html += "<h2>Extra</h2>";
-    for (var k = 0; k < EXTRA.length; k++) {
-      var ex = EXTRA[k];
-      var cls2 = ex.path === path ? " class=\"active\"" : "";
-      html += "<a href=\"#/" + ex.path + "\"" + cls2 + ">" + ex.label + "</a>";
+    for (i = 0; i < EXTRA.length; i++) {
+      if (EXTRA[i].path === path) return { extra: EXTRA[i], item: EXTRA[i] };
     }
-    nav.innerHTML = html;
+    return { item: findItem(path) };
   }
-  function homeHtml() {
-    return [
-      "<div class=\"home\">",
-      "<p class=\"kicker\">YH-kurs \u00b7 45 po\u00e4ng</p>",
-      "<h2>Elteknik och ell\u00e4ra</h2>",
-      "<p>Nio veckor. Tolv moduler. Distans f\u00f6rst, en fysisk labbdag efter vecka 8.</p>",
-      "<ol>",
-      "<li><strong>Vecka 1</strong> \u2014 Els\u00e4kerhet och st\u00f6tar (m1)</li>",
-      "<li><strong>Vecka 2</strong> \u2014 Isolering f\u00f6re arbete (m2)</li>",
-      "<li><strong>Vecka 3</strong> \u2014 Resistiv DC (m3)</li>",
-      "<li><strong>Vecka 4</strong> \u2014 Enfas AC (m4)</li>",
-      "<li><strong>Vecka 5</strong> \u2014 Trefas (m5)</li>",
-      "<li><strong>Vecka 6</strong> \u2014 Maskiner (m6)</li>",
-      "<li><strong>Vecka 7</strong> \u2014 Eltavla (m7) och verktyg (m8)</li>",
-      "<li><strong>Vecka 8</strong> \u2014 Ritningar (m9) och h\u00e5llkrets (m10)</li>",
-      "<li><strong>Vecka 9</strong> \u2014 Elarbete, IP, intyg (m11), fels\u00f6kning (m12) och skriftligt prov</li>",
-      "</ol>",
-      "<p class=\"warn\">L\u00e4rarfacit till det skriftliga provet ligger inte p\u00e5 den h\u00e4r sajten.</p>",
-      "</div>"
-    ].join("");
+  function chapterOf(path) {
+    var i, it;
+    for (i = 0; i < WEEKS.length; i++) {
+      it = WEEKS[i].items.filter(function (x) { return x.path === path && x.figure; })[0];
+      if (it) return { n: i + 1, title: MODULES[i].chap, path: it.path, figure: it.figure, caption: it.caption || "", cal: MODULES[i].cal, hub: MODULES[i].hub, weekIdx: i };
+    }
+    return null;
+  }
+  function allChapters() {
+    var out = [];
+    for (var i = 0; i < WEEKS.length; i++) {
+      for (var j = 0; j < WEEKS[i].items.length; j++) {
+        var it = WEEKS[i].items[j];
+        if (it.figure && it.path.indexOf("bok/") === 0) {
+          out.push({ n: out.length + 1, title: MODULES[i].chap, path: it.path, figure: it.figure, caption: it.caption || "", cal: MODULES[i].cal, hub: MODULES[i].hub, weekIdx: i });
+        }
+      }
+    }
+    return out;
+  }
+  function parseQuiz(md) {
+    var split = String(md || "").split(/^## Facit/im);
+    var body = split[0] || "";
+    var facit = split[1] || "";
+    var answers = {};
+    facit.split("\n").forEach(function (line) {
+      var am = line.match(/^\s*(\d+)\.\s*([ABC])\b/i);
+      if (am) answers[am[1]] = am[2].toUpperCase();
+    });
+    var questions = [];
+    var re = /\*\*Fråga\s+(\d+)\.\*\*\s*/g;
+    var idxs = [];
+    var m;
+    while ((m = re.exec(body))) {
+      idxs.push({ n: m[1], start: m.index, end: m.index + m[0].length });
+    }
+    if (!idxs.length) return null;
+    for (var i = 0; i < idxs.length; i++) {
+      var chunkStart = idxs[i].end;
+      var chunkEnd = i + 1 < idxs.length ? idxs[i + 1].start : body.length;
+      var chunk = body.slice(chunkStart, chunkEnd);
+      var lines = chunk.split("\n");
+      var prompt = [];
+      var options = [];
+      var cur = null;
+      var txt = "";
+      for (var k = 0; k < lines.length; k++) {
+        var om = lines[k].match(/^([ABC])\.\s*(.*)$/);
+        if (om) {
+          if (cur) options.push({ letter: cur, text: txt.trim() });
+          cur = om[1];
+          txt = om[2] || "";
+        } else if (cur) {
+          if (/^\s*---\s*$/.test(lines[k])) { /* skip */ }
+          else if (lines[k].trim()) txt += " " + lines[k].trim();
+        } else if (!/^\s*---\s*$/.test(lines[k])) {
+          prompt.push(lines[k]);
+        }
+      }
+      if (cur) options.push({ letter: cur, text: txt.trim() });
+      var letters = options.map(function (o) { return o.letter; }).join("");
+      if (options.length < 3 || letters.indexOf("A") < 0 || letters.indexOf("B") < 0 || letters.indexOf("C") < 0) return null;
+      var num = idxs[i].n;
+      if (!answers[num]) return null;
+      questions.push({ n: num, prompt: prompt.join("\n").trim(), options: options, answer: answers[num] });
+    }
+    return { intro: body.slice(0, idxs[0].start).trim(), questions: questions };
+  }
+  function parseSlides(md) {
+    var parts = String(md || "").split(/^## Slide\s+/im);
+    if (parts.length < 2) return null;
+    var slides = [];
+    for (var i = 1; i < parts.length; i++) {
+      var chunk = parts[i];
+      var nl = chunk.indexOf("\n");
+      var heading = (nl === -1 ? chunk : chunk.slice(0, nl)).trim();
+      var rest = nl === -1 ? "" : chunk.slice(nl + 1);
+      var nm = rest.split(/^Notes:\s*/im);
+      var body = (nm[0] || "").replace(/^\s*---\s*$/gm, "").trim();
+      var notes = nm.length > 1 ? nm.slice(1).join("Notes: ").replace(/^\s*---\s*$/gm, "").trim() : "";
+      slides.push({ heading: heading, body: body, notes: notes });
+    }
+    return slides.length ? slides : null;
+  }
+  function setBar(html) {
+    var bar = byId("course-bar");
+    if (!html) { bar.hidden = true; bar.innerHTML = ""; return; }
+    bar.hidden = false;
+    bar.innerHTML = html;
+  }
+  function setNav(active) {
+    var nav = byId("top-nav");
+    if (!nav) return;
+    var links = nav.querySelectorAll("a[data-nav]");
+    for (var i = 0; i < links.length; i++) {
+      if (links[i].getAttribute("data-nav") === active) links[i].classList.add("active");
+      else links[i].classList.remove("active");
+    }
+  }
+  function setMain(html, wide) {
+    var el = byId("main");
+    el.className = wide ? "main wide" : "main";
+    el.innerHTML = html;
+    window.scrollTo(0, 0);
+  }
+  function weekVisited(cal) {
+    var hubs = calHubs(cal);
+    if (isVisited("vecka/" + cal)) return true;
+    for (var i = 0; i < hubs.length; i++) {
+      var idx = hubIndex(hubs[i]);
+      if (idx < 0) continue;
+      if (isVisited("vecka/" + hubs[i])) return true;
+      var items = WEEKS[idx].items;
+      for (var j = 0; j < items.length; j++) if (isVisited(items[j].path)) return true;
+    }
+    return false;
+  }
+  function miniLinks(idx) {
+    var steps = orderedSteps(WEEKS[idx]);
+    var names = { lektion: "lektion", bok: "bokkapitel", slides: "bildspel", quiz: "quiz" };
+    var html = "<div class=\"mini-links\">";
+    steps.forEach(function (st) {
+      var k = classify(st);
+      if (!names[k]) return;
+      html += "<a href=\"#/" + st.path + "\">" + names[k] + "</a>";
+    });
+    html += "</div>";
+    return html;
+  }
+  function weekCardHtml(cal) {
+    var hubs = calHubs(cal);
+    var done = weekVisited(cal) ? " <span class=\"check\" title=\"Öppnad\">✓</span>" : "";
+    var html = "<article class=\"card week-card\">";
+    html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\"><h3>Vecka " + cal + done + "</h3></a>";
+    html += "<ul class=\"mods\">";
+    for (var i = 0; i < hubs.length; i++) {
+      var idx = hubIndex(hubs[i]);
+      var info = MODULES[idx];
+      html += "<li><span class=\"mod-id\">" + info.m + "</span> " + esc(info.name) + miniLinks(idx) + "</li>";
+    }
+    html += "</ul>";
+    if (String(cal) === "9") html += "<p class=\"mini-links\"><a href=\"#/prov\">prov</a></p>";
+    html += "</article>";
+    return html;
+  }
+  function weekGridHtml() {
+    var html = "<div class=\"week-grid\">";
+    for (var i = 0; i < CAL_IDS.length; i++) html += weekCardHtml(CAL_IDS[i]);
+    html += "</div>";
+    return html;
   }
   function showHome() {
-    byId("main").innerHTML = homeHtml();
-    renderNav();
+    setNav("start");
+    setBar("");
+    var html = "";
+    html += "<p class=\"kicker\">YH-kurs · Distans</p>";
+    html += "<h2>Elteknik och ellära · Fartyg och automation · 45 p</h2>";
+    html += "<p class=\"lead\">Nio kalenderveckor. Tolv moduler. En fysisk labbdag efter vecka 8.</p>";
+    html += "<div class=\"cta-row\">";
+    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Starta kursen</strong><span>Vecka 1 · Elsäkerhet och stötar</span></a>";
+    html += "<a class=\"cta\" href=\"#/bok\"><strong>Läs boken</strong><span>Tolv kapitel med figurer</span></a>";
+    html += "</div>";
+    html += weekGridHtml();
+    html += "<p class=\"foot-note\">Distansundervisning. Labbdag efter vecka 8. Betyg IG/G/VG. Facit ligger inte på den här sajten.</p>";
+    setMain(html, true);
+  }
+  function showCourse() {
+    setNav("kursen");
+    setBar("");
+    var html = "";
+    html += "<p class=\"kicker\">Kursen</p>";
+    html += "<h2>Nio veckor, tolv moduler</h2>";
+    html += "<p class=\"lead\">Varje vecka är en väg: lektion, bokkapitel, bildspel, quiz och Classroom-uppgift.</p>";
+    html += weekGridHtml();
+    html += "<p class=\"toc-extra\"><a href=\"#/kurs/kurskarta/kurskarta-v2.md\">Kurskarta</a></p>";
+    setMain(html, true);
+  }
+  function stepCardHtml(item, n) {
+    var k = classify(item);
+    var html = "<a class=\"card step-card\" href=\"#/" + item.path + "\">";
+    html += "<span class=\"step-n\">" + n + "</span>";
+    if (item.figure) html += "<img class=\"thumb\" src=\"" + item.figure + "\" alt=\"" + esc(item.caption || item.label) + "\">";
+    html += "<span class=\"step-body\"><span class=\"step-k\">" + esc(STEP_NAME[k] || "") + "</span><strong>" + esc(item.label) + "</strong></span>";
+    if (isVisited(item.path)) html += "<span class=\"check\">✓</span>";
+    html += "</a>";
+    return html;
+  }
+  function modulePathHtml(idx) {
+    var info = MODULES[idx];
+    var steps = orderedSteps(WEEKS[idx]);
+    var html = "<div class=\"mod-block\">";
+    html += "<h3><span class=\"mod-id\">" + info.m + "</span> " + esc(info.name) + "</h3>";
+    html += "<ol class=\"path\">";
+    for (var i = 0; i < steps.length; i++) html += "<li>" + stepCardHtml(steps[i], i + 1) + "</li>";
+    html += "</ol></div>";
+    return html;
+  }
+  function turnHtml(prevHref, prevLabel, nextHref, nextLabel) {
+    var html = "<nav class=\"week-turn\">";
+    html += prevHref ? "<a href=\"" + prevHref + "\">← " + esc(prevLabel) + "</a>" : "<span></span>";
+    html += nextHref ? "<a href=\"" + nextHref + "\">" + esc(nextLabel) + " →</a>" : "<span></span>";
+    html += "</nav>";
+    return html;
+  }
+  function calTurn(cal) {
+    var i = CAL_IDS.indexOf(String(cal));
+    var prevH = i > 0 ? "#/vecka/" + CAL_IDS[i - 1] : "#/";
+    var prevL = i > 0 ? "Vecka " + CAL_IDS[i - 1] : "Start";
+    var nextH, nextL;
+    if (i < CAL_IDS.length - 1) { nextH = "#/vecka/" + CAL_IDS[i + 1]; nextL = "Vecka " + CAL_IDS[i + 1]; }
+    else { nextH = "#/prov"; nextL = "Prov"; }
+    return turnHtml(prevH, prevL, nextH, nextL);
+  }
+  function hubTurn(hub) {
+    var i = HUB_IDS.indexOf(String(hub));
+    var prevH = i > 0 ? "#/vecka/" + HUB_IDS[i - 1] : "#/";
+    var prevL = i > 0 ? "Vecka " + HUB_IDS[i - 1] : "Start";
+    var nextH, nextL;
+    if (i < HUB_IDS.length - 1) { nextH = "#/vecka/" + HUB_IDS[i + 1]; nextL = "Vecka " + HUB_IDS[i + 1]; }
+    else { nextH = "#/prov"; nextL = "Prov"; }
+    return turnHtml(prevH, prevL, nextH, nextL);
+  }
+  function showWeek(id) {
+    var isB = /b$/.test(id);
+    var cal = String(id).replace(/b$/, "");
+    if (CAL_IDS.indexOf(cal) === -1 && hubIndex(id) === -1) { showBlocked(); return; }
+    markVisited("vecka/" + id);
+    setNav("kursen");
+    setBar("");
+    var html = "<p class=\"kicker\">Kursen</p>";
+    var hubs;
+    if (isB || hubIndex(id) !== -1 && calHubs(cal).length === 1) {
+      var idx = hubIndex(id);
+      if (idx < 0) { showBlocked(); return; }
+      var info = MODULES[idx];
+      html += "<h2>Vecka " + id + " · " + esc(info.name) + "</h2>";
+      html += "<p class=\"lead\">Fem steg. Öppna ett kort för innehållet.</p>";
+      html += modulePathHtml(idx);
+      html += hubTurn(id);
+    } else {
+      hubs = calHubs(cal);
+      if (!hubs.length) { showBlocked(); return; }
+      html += "<h2>Vecka " + cal + "</h2>";
+      var names = hubs.map(function (h) { var m = MODULES[hubIndex(h)]; return m.m + " " + m.name; });
+      html += "<p class=\"lead\">" + esc(names.join(" · ")) + ". Fem steg per modul.</p>";
+      if (cal === "9") html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
+      for (var i = 0; i < hubs.length; i++) html += modulePathHtml(hubIndex(hubs[i]));
+      html += calTurn(cal);
+    }
+    setMain(html, true);
+  }
+  function showBook() {
+    setNav("bok");
+    setBar("");
+    var ch = allChapters();
+    var html = "<p class=\"kicker\">Boken</p>";
+    html += "<h2>Elteknik och ellära</h2>";
+    html += "<p class=\"lead\">Tolv kapitel. En figur per kapitel.</p>";
+    html += "<p class=\"toc-extra\"><a href=\"#/bok/kapitellista-v2.md\">Innehåll</a> · kapitellista</p>";
+    html += "<ol class=\"chapter-list\">";
+    for (var i = 0; i < ch.length; i++) {
+      var c = ch[i];
+      var done = isVisited(c.path) ? " <span class=\"check\">✓</span>" : "";
+      html += "<li><a class=\"card chapter-row\" href=\"#/" + c.path + "\">";
+      html += "<span class=\"n\">" + c.n + "</span>";
+      html += "<img class=\"thumb\" src=\"" + c.figure + "\" alt=\"" + esc(c.caption) + "\">";
+      html += "<span class=\"step-body\"><span class=\"step-k\">Kapitel " + c.n + "</span><h3>" + esc(c.title) + done + "</h3></span>";
+      html += "</a></li>";
+    }
+    html += "</ol>";
+    setMain(html, true);
+  }
+  function showProv() {
+    setNav("prov");
+    setBar("");
+    var html = "<p class=\"kicker\">Vecka 9</p><h2>Prov</h2>";
+    html += "<p class=\"lead\">Skriftligt prov. Facit ligger inte på den här sajten.</p>";
+    html += "<div class=\"prov-grid\">";
+    html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-elev.md\"><span class=\"step-k\">Prov</span><h3>Skriftligt prov (elev)</h3></a>";
+    html += "<a class=\"card\" href=\"#/kurs/lararhandledning/classroom-v-prov-vecka9.md\"><span class=\"step-k\">Classroom</span><h3>Classroom-inlägg vecka 9</h3></a>";
+    html += "</div>";
+    setMain(html, true);
   }
   function showBlocked() {
-    byId("main").innerHTML = "<p class=\"page-err\">Den sidan finns inte p\u00e5 studentsajten.</p>";
-    renderNav();
+    setNav("");
+    setBar("");
+    setMain("<p class=\"page-err\">Den sidan finns inte på studentsajten.</p>");
   }
-  function loadPage(path) {
-    if (!path || path === "/") { showHome(); return; }
+  function courseBarFor(path) {
+    var loc = locatePath(path);
+    if (loc.mod) {
+      var nextHref;
+      if (loc.step < loc.total) nextHref = "#/" + loc.steps[loc.step].path;
+      else if (loc.weekIdx + 1 < WEEKS.length) nextHref = "#/vecka/" + MODULES[loc.weekIdx + 1].hub;
+      else nextHref = "#/prov";
+      var left = "<a href=\"#/vecka/" + loc.mod.hub + "\">Vecka " + loc.mod.hub + "</a> · Steg " + loc.step + "/" + loc.total;
+      return "<div class=\"bar-inner\"><span>" + left + "</span><a href=\"" + nextHref + "\">Nästa →</a></div>";
+    }
+    if (/labbdag/i.test(path)) return "<div class=\"bar-inner\"><span>Labbdag</span><a href=\"#/kursen\">Till kursen →</a></div>";
+    if (/prov/i.test(path)) return "<div class=\"bar-inner\"><span><a href=\"#/prov\">Prov</a></span></div>";
+    if (path.indexOf("bok/") === 0) return "<div class=\"bar-inner\"><span><a href=\"#/bok\">Boken</a></span></div>";
+    return "<div class=\"bar-inner\"><span><a href=\"#/kursen\">Kursen</a></span></div>";
+  }
+  function renderQuiz(parsed, path) {
+    var html = "<div class=\"quiz\" id=\"quiz-root\">";
+    if (parsed.intro) html += "<div class=\"quiz-intro\">" + mdHtml(parsed.intro, path) + "</div>";
+    parsed.questions.forEach(function (q) {
+      html += "<div class=\"q\" data-n=\"" + q.n + "\" data-answer=\"" + q.answer + "\">";
+      html += "<p class=\"q-n\">Fråga " + q.n + "</p>";
+      html += "<div class=\"q-prompt\">" + mdHtml(q.prompt, path) + "</div><div class=\"q-opts\">";
+      q.options.forEach(function (o) {
+        html += "<button type=\"button\" data-letter=\"" + o.letter + "\">" + o.letter + ". " + esc(o.text) + "</button>";
+      });
+      html += "</div><p class=\"q-fb\" hidden></p></div>";
+    });
+    html += "<p class=\"quiz-score\" hidden></p></div>";
+    return html;
+  }
+  function bindQuiz() {
+    var root = byId("quiz-root");
+    if (!root) return;
+    var qs = root.querySelectorAll(".q");
+    var answered = 0, correct = 0, total = qs.length;
+    var score = root.querySelector(".quiz-score");
+    qs.forEach(function (qel) {
+      var ans = qel.getAttribute("data-answer");
+      qel.querySelectorAll("[data-letter]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          if (qel.getAttribute("data-done")) return;
+          qel.setAttribute("data-done", "1");
+          var pick = btn.getAttribute("data-letter");
+          var ok = pick === ans;
+          answered += 1;
+          if (ok) correct += 1;
+          qel.querySelectorAll("[data-letter]").forEach(function (b) {
+            b.disabled = true;
+            if (b.getAttribute("data-letter") === ans) b.classList.add("correct");
+            if (b === btn && !ok) b.classList.add("wrong");
+          });
+          var fb = qel.querySelector(".q-fb");
+          fb.hidden = false;
+          fb.textContent = ok ? "Rätt" : "Fel";
+          fb.className = "q-fb " + (ok ? "ok" : "no");
+          if (answered === total) {
+            score.hidden = false;
+            score.textContent = "Resultat: " + correct + " av " + total + " rätt.";
+          }
+        });
+      });
+    });
+  }
+  function bindSlides(slides, path) {
+    var root = byId("deck-root");
+    if (!root) return;
+    var i = 0;
+    function draw() {
+      var s = slides[i];
+      var html = "<p class=\"deck-meta\">Bild " + (i + 1) + " av " + slides.length + "</p>";
+      html += "<div class=\"slide\"><h2>Slide " + esc(s.heading) + "</h2>";
+      html += "<div class=\"slide-body\">" + mdHtml(s.body, path) + "</div></div>";
+      if (s.notes) html += "<div class=\"notes\"><strong>Lärarnotis</strong>" + mdHtml(s.notes, path) + "</div>";
+      html += "<div class=\"deck-nav\">";
+      html += "<button type=\"button\" class=\"ghost\" id=\"deck-prev\"" + (i === 0 ? " disabled" : "") + ">Föregående</button>";
+      html += "<button type=\"button\" id=\"deck-next\"" + (i === slides.length - 1 ? " disabled" : "") + ">Nästa</button>";
+      html += "</div>";
+      root.innerHTML = html;
+      var prev = byId("deck-prev");
+      var next = byId("deck-next");
+      if (prev) prev.addEventListener("click", function () { if (i > 0) { i -= 1; draw(); } });
+      if (next) next.addEventListener("click", function () { if (i < slides.length - 1) { i += 1; draw(); } });
+    }
+    draw();
+  }
+  function chapterFooter(path) {
+    var chs = allChapters();
+    var idx = -1, i;
+    for (i = 0; i < chs.length; i++) if (chs[i].path === path) idx = i;
+    if (idx < 0) return "";
+    var html = "<nav class=\"chap-nav\">";
+    html += idx > 0 ? "<a href=\"#/" + chs[idx - 1].path + "\">← Kapitel " + chs[idx - 1].n + "</a>" : "<span></span>";
+    html += idx < chs.length - 1 ? "<a href=\"#/" + chs[idx + 1].path + "\">Kapitel " + chs[idx + 1].n + " →</a>" : "<span></span>";
+    html += "</nav>";
+    html += "<p class=\"toc-extra\"><a href=\"#/vecka/" + chs[idx].cal + "\">Till vecka " + chs[idx].cal + "</a> · <a href=\"#/bok\">Boken</a></p>";
+    return html;
+  }
+  function showDoc(path) {
     if (hasFacit(path) || !okPath(path)) { showBlocked(); return; }
-    var item = findItem(path);
+    if (path.indexOf("bok/") === 0) setNav("bok");
+    else if (path.indexOf("labbdag") !== -1) setNav("labbdag");
+    else if (path.indexOf("prov") !== -1) setNav("prov");
+    else setNav("kursen");
+    setBar(courseBarFor(path));
     fetch(path).then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
       return res.text();
     }).then(function (md) {
+      markVisited(path);
       var html = "";
-      if (item && item.figure) {
-        html += "<figure class=\"figure\"><img src=\"" + item.figure + "\" alt=\"" + (item.caption || "") + "\">";
-        if (item.caption) html += "<figcaption>" + item.caption + "</figcaption>";
+      var item = findItem(path);
+      var chap = chapterOf(path);
+      var fig = chap || (item && item.figure ? item : null);
+      if (fig && fig.figure) {
+        html += "<figure class=\"figure\"><img src=\"" + fig.figure + "\" alt=\"" + esc(fig.caption || "") + "\">";
+        if (fig.caption) html += "<figcaption>" + esc(fig.caption) + "</figcaption>";
         html += "</figure>";
       }
-      html += marked.parse(rewriteMd(md, path));
-      byId("main").innerHTML = html;
-      renderNav();
-      window.scrollTo(0, 0);
+      var after = null;
+      if (path.indexOf("-quiz.md") !== -1) {
+        var quiz = parseQuiz(md);
+        if (quiz) { html += renderQuiz(quiz, path); after = bindQuiz; }
+        else html += mdHtml(stripFacit(md), path);
+      } else if (path.indexOf("-slides.md") !== -1) {
+        var slides = parseSlides(md);
+        if (slides) {
+          html += "<div class=\"deck\" id=\"deck-root\"></div>";
+          after = function () { bindSlides(slides, path); };
+        } else html += mdHtml(md, path);
+      } else {
+        html += mdHtml(md, path);
+      }
+      if (chap) html += chapterFooter(path);
+      setMain(html);
+      if (after) after();
     }).catch(function () {
-      byId("main").innerHTML = "<p class=\"page-err\">Kunde inte l\u00e4sa sidan.</p>";
-      renderNav();
+      setMain("<p class=\"page-err\">Kunde inte läsa sidan.</p>");
     });
+  }
+  function showLab() {
+    setNav("labbdag");
+    setBar("<div class=\"bar-inner\"><span>Labbdag</span></div>");
+    fetch("kurs/labbdag-v2.md").then(function (res) {
+      if (!res.ok) throw new Error(String(res.status));
+      return res.text();
+    }).then(function (md) {
+      markVisited("kurs/labbdag-v2.md");
+      setMain(mdHtml(md, "kurs/labbdag-v2.md"));
+    }).catch(function () {
+      setMain("<p class=\"page-err\">Kunde inte läsa sidan.</p>");
+    });
+  }
+  function route() {
+    var raw = hashPath();
+    if (hasFacit(raw)) { showBlocked(); return; }
+    if (!raw) { showHome(); return; }
+    if (raw === "kursen") { showCourse(); return; }
+    if (raw === "bok") { showBook(); return; }
+    if (raw === "labbdag") { showLab(); return; }
+    if (raw === "prov") { showProv(); return; }
+    var w = raw.match(/^vecka\/(\d+b?)$/);
+    if (w) { showWeek(w[1]); return; }
+    if (okPath(raw)) { showDoc(raw); return; }
+    showBlocked();
   }
   function showApp() {
     byId("gate").hidden = true;
     byId("app").hidden = false;
-    loadPage(hashPath());
+    route();
   }
   function showGate() {
     byId("gate").hidden = false;
@@ -274,7 +745,7 @@
   }
   function onHash() {
     if (!isOpen()) { showGate(); return; }
-    loadPage(hashPath());
+    route();
   }
   function initGate() {
     var form = byId("gate-form");
@@ -296,6 +767,17 @@
       setOpen(false);
       byId("pw").value = "";
       showGate();
+    });
+    byId("main").addEventListener("click", function (e) {
+      var a = e.target.closest ? e.target.closest("a") : null;
+      if (!a) return;
+      var href = a.getAttribute("href") || "";
+      var decoded = href;
+      try { decoded = decodeURIComponent(href); } catch (err) {}
+      if (hasFacit(href) || hasFacit(decoded)) {
+        e.preventDefault();
+        showBlocked();
+      }
     });
     window.addEventListener("hashchange", onHash);
     if (isOpen()) showApp();
