@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang=sv>
+<head>
+  <meta charset=utf-8>
+  <meta name=viewport content="width=device-width, initial-scale=1">
+  <title>Elteknik och ellära</title>
+  <link rel=stylesheet href=site/style.css>
+</head>
+<body>
+  <div id=gate class=gate hidden>
+    <form class=gate-card id=gate-form>
+      <p class=kicker>YH · Fartyg och automation</p>
+      <h1>Elteknik och ellära</h1>
+      <p class=sub>45 poäng. Lås upp kursmaterialet.</p>
+      <label for=pw>Lösenord</label>
+      <input id=pw name=password type=password autocomplete=current-password required>
+      <button type=submit>Öppna</button>
+      <p id=gate-err class=err hidden>Fel lösenord.</p>
+    </form>
+  </div>
+  <div id=app hidden>
+    <header class=top>
+      <div>
+        <p class=kicker>YH · 45 p</p>
+        <h1><a href="#/" id=home-link>Elteknik och ellära</a></h1>
+      </div>
+      <div class=top-actions>
+        <button type=button class=ghost id=lock-btn>Lås</button>
+      </div>
+    </header>
+    <div class=layout>
+      <nav class=nav id=nav aria-label=Kursnavigering></nav>
+      <main class=main id=main></main>
+    </div>
+  </div>
+  <script src=https://cdn.jsdelivr.net/npm/marked@15.0.7/marked.min.js></script>
+  <script src=site/app.js></script>
+</body>
+</html>

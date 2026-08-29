@@ -2,6 +2,11 @@
 
 YH-course **Elteknik och ellära** (45 credits) in *Elingenjör, fartyg och automation*, plus the matching KDP paperback.
 
+## Studentsajt
+
+Live: https://nj22az.github.io/elteknik-och-ellara/
+Lösenord: `Fartyg45` (courtesy gate only; this repo is public).
+
 Working locally: clone this repo. It is public and free. Status below is the source of truth for what is actually written.
 
 ## Status (2026-08-28)
