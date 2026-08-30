@@ -69,7 +69,7 @@ Kedja **i ordning**. Referens **skrov/stomme**, inte PE.
 ## Två spår — en rad
 
 Elektriker = referens är inte PE-skenan hemma.
-Ingenjör = tyst maskin är inte bevisat död.
+Ingenjör = bara för att maskinen inte låter betyder det inte att den är avställd.
 
 ---
 

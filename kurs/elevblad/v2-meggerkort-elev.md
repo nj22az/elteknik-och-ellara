@@ -64,7 +64,7 @@ Samma grupp hela kortet. Referens är **skrov/stomme**, inte PE-skena.
 ## Två spår — en rad
 
 Elektriker: referens är inte PE-skenan hemma.
-Ingenjör: tyst maskin är inte bevisat död.
+Ingenjör: bara för att maskinen inte låter betyder det inte att den är avställd.
 
 Skriv raden för ditt spår:
 
