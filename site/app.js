@@ -11,7 +11,7 @@
 
   var WEEKS = [
     {
-      title: "Vecka 1 m1",
+      title: "V1 · M01",
       items: [
         {"label": "Lektion 1.1 Stötar", "path": "kurs/lektioner/1.1-stotar.md"},
         {"label": "Kapitel 1 Elsäkerhet", "path": "bok/kapitel-01-elsakerhet-stotar.md", "figure": "bok/figur-1-1-stotvag-ventil.png", "caption": "Figur 1.1"},
@@ -21,7 +21,7 @@
       ]
     },
     {
-      title: "Vecka 2",
+      title: "V2 · M02",
       items: [
         {"label": "Lektion 2.1 Isolering", "path": "kurs/lektioner/2.1-isolering.md"},
         {"label": "Kapitel 2 Isolering", "path": "bok/kapitel-02-isolering-fore-arbete.md", "figure": "bok/figur-2-1-isolering-kedja.png", "caption": "Figur 2.1"},
@@ -31,7 +31,7 @@
       ]
     },
     {
-      title: "Vecka 3",
+      title: "V3 · M03",
       items: [
         {"label": "Lektion 3.1 DC", "path": "kurs/lektioner/3.1-dc.md"},
         {"label": "Kapitel 3 Resistiv DC", "path": "bok/kapitel-03-resistiv-dc.md", "figure": "bok/figur-3-1-dc-matning.png", "caption": "Figur 3.1"},
@@ -41,7 +41,7 @@
       ]
     },
     {
-      title: "Vecka 4",
+      title: "V4 · M04",
       items: [
         {"label": "Lektion 4.1 Enfas AC", "path": "kurs/lektioner/4.1-enfas-ac.md"},
         {"label": "Kapitel 4 Enfas AC", "path": "bok/kapitel-04-enfas-ac.md", "figure": "bok/figur-4-1-enfas-ac.png", "caption": "Figur 4.1"},
@@ -51,7 +51,7 @@
       ]
     },
     {
-      title: "Vecka 5",
+      title: "V5 · M05",
       items: [
         {"label": "Lektion 5.1 Trefas", "path": "kurs/lektioner/5.1-trefas.md"},
         {"label": "Kapitel 5 Trefas", "path": "bok/kapitel-05-trefas-spanningstyper.md", "figure": "bok/figur-5-1-trefas-spanning.png", "caption": "Figur 5.1"},
@@ -61,7 +61,7 @@
       ]
     },
     {
-      title: "Vecka 6",
+      title: "V6 · M06",
       items: [
         {"label": "Lektion 6.1 Maskiner", "path": "kurs/lektioner/6.1-maskiner.md"},
         {"label": "Kapitel 6 Maskiner", "path": "bok/kapitel-06-maskiner.md", "figure": "bok/figur-6-1-maskiner.png", "caption": "Figur 6.1"},
@@ -71,7 +71,7 @@
       ]
     },
     {
-      title: "Vecka 7",
+      title: "V7 · M07",
       items: [
         {"label": "Lektion 7.1 Eltavla", "path": "kurs/lektioner/7.1-eltavla.md"},
         {"label": "Kapitel 7 Eltavla", "path": "bok/kapitel-07-eltavla.md", "figure": "bok/figur-7-1-eltavla.png", "caption": "Figur 7.1"},
@@ -81,53 +81,53 @@
       ]
     },
     {
-      title: "Vecka 7b m8",
+      title: "V7 · M08",
       items: [
         {"label": "Lektion 8.1 Verktyg", "path": "kurs/lektioner/8.1-verktyg.md"},
         {"label": "Kapitel 8 Verktyg", "path": "bok/kapitel-08-verktyg.md", "figure": "bok/figur-8-1-verktyg.png", "caption": "Figur 8.1"},
         {"label": "Classroom vecka 7b", "path": "kurs/lararhandledning/classroom-v7b-vecka7.md"},
-        {"label": "Quiz m8", "path": "kurs/lararhandledning/classroom-v8-quiz.md"},
-        {"label": "Bildspel m8", "path": "kurs/lararhandledning/classroom-v8-slides.md"}
+        {"label": "Quiz M08", "path": "kurs/lararhandledning/classroom-v8-quiz.md"},
+        {"label": "Bildspel M08", "path": "kurs/lararhandledning/classroom-v8-slides.md"}
       ]
     },
     {
-      title: "Vecka 8 m9",
+      title: "V8 · M09",
       items: [
         {"label": "Lektion 9.1 Ritningar", "path": "kurs/lektioner/9.1-ritningar.md"},
         {"label": "Kapitel 9 Ritningar", "path": "bok/kapitel-09-ritningar.md", "figure": "bok/figur-9-1-ritningar.png", "caption": "Figur 9.1"},
         {"label": "Classroom vecka 8", "path": "kurs/lararhandledning/classroom-v8-vecka8.md"},
-        {"label": "Quiz m9", "path": "kurs/lararhandledning/classroom-v9-quiz.md"},
-        {"label": "Bildspel m9", "path": "kurs/lararhandledning/classroom-v9-slides.md"}
+        {"label": "Quiz M09", "path": "kurs/lararhandledning/classroom-v9-quiz.md"},
+        {"label": "Bildspel M09", "path": "kurs/lararhandledning/classroom-v9-slides.md"}
       ]
     },
     {
-      title: "Vecka 8b m10",
+      title: "V8 · M10",
       items: [
         {"label": "Lektion 10.1 Hållkrets", "path": "kurs/lektioner/10.1-hallkrets.md"},
         {"label": "Kapitel 10 Hållkrets", "path": "bok/kapitel-10-hallkrets.md", "figure": "bok/figur-10-1-hallkrets.png", "caption": "Figur 10.1"},
         {"label": "Classroom vecka 8b", "path": "kurs/lararhandledning/classroom-v8b-vecka8.md"},
-        {"label": "Quiz m10", "path": "kurs/lararhandledning/classroom-v10-quiz.md"},
-        {"label": "Bildspel m10", "path": "kurs/lararhandledning/classroom-v10-slides.md"}
+        {"label": "Quiz M10", "path": "kurs/lararhandledning/classroom-v10-quiz.md"},
+        {"label": "Bildspel M10", "path": "kurs/lararhandledning/classroom-v10-slides.md"}
       ]
     },
     {
-      title: "Vecka 9 m11",
+      title: "V9 · M11",
       items: [
         {"label": "Lektion 11.1 Arbete IP intyg", "path": "kurs/lektioner/11.1-arbete-ip-intyg.md"},
         {"label": "Kapitel 11 Elarbete IP intyg", "path": "bok/kapitel-11-elarbete-ip-intyg.md", "figure": "bok/figur-11-1-arbete-ip-intyg.png", "caption": "Figur 11.1"},
         {"label": "Classroom vecka 9", "path": "kurs/lararhandledning/classroom-v9-vecka9.md"},
-        {"label": "Quiz m11", "path": "kurs/lararhandledning/classroom-v11-quiz.md"},
-        {"label": "Bildspel m11", "path": "kurs/lararhandledning/classroom-v11-slides.md"}
+        {"label": "Quiz M11", "path": "kurs/lararhandledning/classroom-v11-quiz.md"},
+        {"label": "Bildspel M11", "path": "kurs/lararhandledning/classroom-v11-slides.md"}
       ]
     },
     {
-      title: "Vecka 9b m12",
+      title: "V9 · M12",
       items: [
         {"label": "Lektion 12.1 Felsökning", "path": "kurs/lektioner/12.1-felsokning.md"},
         {"label": "Kapitel 12 Felsökning", "path": "bok/kapitel-12-felsokning.md", "figure": "bok/figur-12-1-felsokning.png", "caption": "Figur 12.1"},
         {"label": "Classroom vecka 9b", "path": "kurs/lararhandledning/classroom-v9b-vecka9.md"},
-        {"label": "Quiz m12", "path": "kurs/lararhandledning/classroom-v12-quiz.md"},
-        {"label": "Bildspel m12", "path": "kurs/lararhandledning/classroom-v12-slides.md"}
+        {"label": "Quiz M12", "path": "kurs/lararhandledning/classroom-v12-quiz.md"},
+        {"label": "Bildspel M12", "path": "kurs/lararhandledning/classroom-v12-slides.md"}
       ]
     }
   ];
@@ -144,18 +144,18 @@
   var STEP_NAME = { lektion: "Lektion", bok: "Kapitel", slides: "Bildspel", quiz: "Quiz", classroom: "Lärarhandledning" };
   var STUDENT_STEPS = ["lektion", "bok", "slides", "quiz"];
   var MODULES = [
-    { hub: "1", cal: "1", m: "m1", name: "Elsäkerhet och stötar", chap: "Elsäkerhet, stötar" },
-    { hub: "2", cal: "2", m: "m2", name: "Isolering före arbete", chap: "Isolering före arbete" },
-    { hub: "3", cal: "3", m: "m3", name: "Resistiv DC", chap: "Resistiv DC" },
-    { hub: "4", cal: "4", m: "m4", name: "Enfas AC", chap: "Enfas AC" },
-    { hub: "5", cal: "5", m: "m5", name: "Trefas", chap: "Trefas, spänningstyper" },
-    { hub: "6", cal: "6", m: "m6", name: "Maskiner", chap: "Maskiner" },
-    { hub: "7", cal: "7", m: "m7", name: "Eltavla", chap: "Eltavla" },
-    { hub: "7b", cal: "7", m: "m8", name: "Verktyg", chap: "Verktyg" },
-    { hub: "8", cal: "8", m: "m9", name: "Ritningar", chap: "Ritningar" },
-    { hub: "8b", cal: "8", m: "m10", name: "Hållkrets", chap: "Hållkrets" },
-    { hub: "9", cal: "9", m: "m11", name: "Elarbete, IP, intyg", chap: "Elarbete, IP, intyg" },
-    { hub: "9b", cal: "9", m: "m12", name: "Felsökning", chap: "Felsökning" }
+    { hub: "1", cal: "1", m: "M01", name: "Elsäkerhet och stötar", chap: "Elsäkerhet, stötar" },
+    { hub: "2", cal: "2", m: "M02", name: "Isolering före arbete", chap: "Isolering före arbete" },
+    { hub: "3", cal: "3", m: "M03", name: "Resistiv DC", chap: "Resistiv DC" },
+    { hub: "4", cal: "4", m: "M04", name: "Enfas AC", chap: "Enfas AC" },
+    { hub: "5", cal: "5", m: "M05", name: "Trefas", chap: "Trefas, spänningstyper" },
+    { hub: "6", cal: "6", m: "M06", name: "Maskiner", chap: "Maskiner" },
+    { hub: "7", cal: "7", m: "M07", name: "Eltavla", chap: "Eltavla" },
+    { hub: "7b", cal: "7", m: "M08", name: "Verktyg", chap: "Verktyg" },
+    { hub: "8", cal: "8", m: "M09", name: "Ritningar", chap: "Ritningar" },
+    { hub: "8b", cal: "8", m: "M10", name: "Hållkrets", chap: "Hållkrets" },
+    { hub: "9", cal: "9", m: "M11", name: "Elarbete, IP, intyg", chap: "Elarbete, IP, intyg" },
+    { hub: "9b", cal: "9", m: "M12", name: "Felsökning", chap: "Felsökning" }
   ];
   var CAL_IDS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   var HUB_IDS = ["1", "2", "3", "4", "5", "6", "7", "7b", "8", "8b", "9", "9b"];
@@ -242,6 +242,19 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
   }
+  function lozengeHtml(code) {
+    var raw = String(code || "").toUpperCase().replace(/\s+/g, "");
+    if (/^M\d$/.test(raw)) raw = "M0" + raw.charAt(1);
+    if (/^\d+$/.test(raw)) raw = "M" + (raw.length < 2 ? "0" + raw : raw);
+    return "<span class=\"lozenge mod-id " + raw.toLowerCase() + "\">" + esc(raw) + "</span>";
+  }
+  function stationHtml(code, extra) {
+    var raw = String(code || "").toUpperCase().replace(/\s+/g, "");
+    if (raw.charAt(0) !== "V") raw = "V" + raw;
+    var cls = "station " + raw.toLowerCase();
+    if (extra) cls += " " + extra;
+    return "<span class=\"" + cls + "\">" + esc(raw) + "</span>";
+  }
   function getProgress() {
     try { return JSON.parse(localStorage.getItem(PROGRESS_KEY) || "{}") || {}; }
     catch (e) { return {}; }
@@ -272,9 +285,19 @@
     for (var i = 0; i < MODULES.length; i++) if (MODULES[i].hub === hub) return i;
     return -1;
   }
+  function hubStationLabel(hub) {
+    var idx = hubIndex(hub);
+    if (idx < 0) return String(hub);
+    return "V" + MODULES[idx].cal + " · " + MODULES[idx].m;
+  }
   function calHubs(cal) {
     var out = [];
     for (var i = 0; i < MODULES.length; i++) if (MODULES[i].cal === String(cal)) out.push(MODULES[i].hub);
+    return out;
+  }
+  function calModules(cal) {
+    var out = [];
+    for (var i = 0; i < MODULES.length; i++) if (MODULES[i].cal === String(cal)) out.push(MODULES[i]);
     return out;
   }
   function findItem(path) {
@@ -495,9 +518,9 @@
     else setShell("elev");
     var k = byId("brand-kicker");
     if (k) {
-      if (role === "teacher") k.textContent = "Lärare · 45 p";
-      else if (role === "book") k.textContent = "Fartyg och automation";
-      else k.textContent = "YH · 45 p";
+      if (role === "teacher") k.innerHTML = "<span class=\"xfer\">LÄRARE</span> 45 p";
+      else if (role === "book") k.innerHTML = "<span class=\"xfer\">BOK</span> Fartyg och automation";
+      else k.innerHTML = "<span class=\"xfer\">ELEV</span> 45 p";
     }
   }
   function setShell(name) { document.documentElement.setAttribute("data-shell", name); }
@@ -536,20 +559,29 @@
   }
   function studentWeekCard(cal) {
     var done = weekVisited(cal) ? " <span class=\"check\">✓</span>" : "";
-    var html = "<article class=\"card week-card\">";
+    var mods = calModules(cal);
+    var html = "<article class=\"card week-card\" data-v=\"" + cal + "\">";
     html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\">";
-    html += "<span class=\"week-num\">" + cal + "</span>";
+    html += stationHtml("V" + cal, "week-num");
     html += "<h3>Vecka " + cal + done + "</h3>";
-    html += "<p class=\"path-line\">Lektion → Kapitel → Bildspel → Quiz</p>";
+    html += "<span class=\"lozenge-row\">";
+    for (var i = 0; i < mods.length; i++) html += lozengeHtml(mods[i].m);
+    if (mods.length > 1) html += "<span class=\"xfer\">byte</span>";
+    html += "</span>";
     html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
     html += "</a></article>";
     return html;
   }
   function teacherWeekCard(cal) {
-    var html = "<article class=\"card week-card\">";
+    var mods = calModules(cal);
+    var html = "<article class=\"card week-card\" data-v=\"" + cal + "\">";
     html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\">";
-    html += "<span class=\"week-num\">" + cal + "</span>";
+    html += stationHtml("V" + cal, "week-num");
     html += "<h3>Vecka " + cal + "</h3>";
+    html += "<span class=\"lozenge-row\">";
+    for (var i = 0; i < mods.length; i++) html += lozengeHtml(mods[i].m);
+    if (mods.length > 1) html += "<span class=\"xfer\">byte</span>";
+    html += "</span>";
     html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
     html += "<p class=\"path-line\">Handledning · Bildspel · Quiz · Lektion · Kapitel · G–VG–IG</p>";
     html += "</a></article>";
@@ -570,9 +602,9 @@
     var html = "";
     html += "<p class=\"kicker\">YH-kurs · Distans</p>";
     html += "<h2>Elteknik och ellära</h2>";
-    html += "<p class=\"lead\">Nio kalenderveckor. Tolv moduler. 45 poäng. En fysisk labbdag efter vecka 8.</p>";
+    html += "<p class=\"lead\">Nio stationer V1–V9. Tolv linjer M01–M12. 45 poäng. En fysisk labbdag efter V8.</p>";
     html += "<div class=\"cta-row\">";
-    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Starta vecka 1</strong><span>Elsäkerhet och stötar</span></a>";
+    html += "<a class=\"cta\" href=\"#/vecka/1\">" + stationHtml("V1", "week-num") + "<span><strong>Starta V1</strong><span>Elsäkerhet och stötar</span></span></a>";
     html += "<a class=\"cta\" href=\"#/bok\"><strong>Läs boken</strong><span>Tolv kapitel som stöd</span></a>";
     html += "</div>";
     html += weekGridHtml();
@@ -584,8 +616,8 @@
     setShell("elev");
     setNav("kursen");
     setBar("");
-    var html = "<p class=\"kicker\">Kursen</p><h2>Nio veckor</h2>";
-    html += "<p class=\"lead\">Varje vecka: lektion, kapitel, bildspel, quiz.</p>";
+    var html = "<p class=\"kicker\">Kursen</p><h2>Nio stationer</h2>";
+    html += "<p class=\"lead\">Varje station: lektion, kapitel, bildspel, quiz.</p>";
     html += weekGridHtml();
     html += "<p class=\"toc-extra\"><a href=\"#/kurs/kurskarta/kurskarta-v2.md\">Kurskarta</a></p>";
     setMain(html, true);
@@ -612,7 +644,7 @@
     var info = MODULES[idx];
     var steps = orderedSteps(WEEKS[idx]);
     var html = "<div class=\"mod-block\">";
-    html += "<h3><span class=\"mod-id\">" + info.m + "</span> " + esc(info.name) + "</h3>";
+    html += "<h3>" + lozengeHtml(info.m) + " " + esc(info.name) + "</h3>";
     html += "<ol class=\"path\">";
     for (var i = 0; i < steps.length; i++) html += "<li>" + stepCardHtml(steps[i], i + 1) + "</li>";
     if (isTeacher()) html += "<li>" + teacherBetygCard(idx, steps.length + 1) + "</li>";
@@ -621,26 +653,26 @@
   }
   function turnHtml(prevHref, prevLabel, nextHref, nextLabel) {
     var html = "<nav class=\"week-turn\">";
-    html += prevHref ? "<a href=\"" + prevHref + "\">← " + esc(prevLabel) + "</a>" : "<span></span>";
-    html += nextHref ? "<a href=\"" + nextHref + "\">" + esc(nextLabel) + " →</a>" : "<span></span>";
+    html += prevHref ? "<a href=\"" + prevHref + "\">Föregående station · " + esc(prevLabel) + "</a>" : "<span></span>";
+    html += nextHref ? "<a href=\"" + nextHref + "\">Nästa station · " + esc(nextLabel) + "</a>" : "<span></span>";
     html += "</nav>";
     return html;
   }
   function calTurn(cal) {
     var i = CAL_IDS.indexOf(String(cal));
     var prevH = i > 0 ? "#/vecka/" + CAL_IDS[i - 1] : "#/";
-    var prevL = i > 0 ? "Vecka " + CAL_IDS[i - 1] : "Start";
+    var prevL = i > 0 ? "V" + CAL_IDS[i - 1] : "Start";
     var nextH, nextL;
-    if (i < CAL_IDS.length - 1) { nextH = "#/vecka/" + CAL_IDS[i + 1]; nextL = "Vecka " + CAL_IDS[i + 1]; }
+    if (i < CAL_IDS.length - 1) { nextH = "#/vecka/" + CAL_IDS[i + 1]; nextL = "V" + CAL_IDS[i + 1]; }
     else { nextH = isTeacher() ? "#/facit" : "#/prov"; nextL = isTeacher() ? "Facit" : "Prov"; }
     return turnHtml(prevH, prevL, nextH, nextL);
   }
   function hubTurn(hub) {
     var i = HUB_IDS.indexOf(String(hub));
     var prevH = i > 0 ? "#/vecka/" + HUB_IDS[i - 1] : "#/";
-    var prevL = i > 0 ? "Vecka " + HUB_IDS[i - 1] : "Start";
+    var prevL = i > 0 ? hubStationLabel(HUB_IDS[i - 1]) : "Start";
     var nextH, nextL;
-    if (i < HUB_IDS.length - 1) { nextH = "#/vecka/" + HUB_IDS[i + 1]; nextL = "Vecka " + HUB_IDS[i + 1]; }
+    if (i < HUB_IDS.length - 1) { nextH = "#/vecka/" + HUB_IDS[i + 1]; nextL = hubStationLabel(HUB_IDS[i + 1]); }
     else { nextH = isTeacher() ? "#/facit" : "#/prov"; nextL = isTeacher() ? "Facit" : "Prov"; }
     return turnHtml(prevH, prevL, nextH, nextL);
   }
@@ -658,14 +690,19 @@
       var idx = hubIndex(id);
       if (idx < 0) { showBlocked(); return; }
       var info = MODULES[idx];
-      html += "<div class=\"week-hero\"><span class=\"week-num\">" + id + "</span><div><h2>" + esc(info.name) + "</h2></div></div>";
-      html += "<p class=\"lead\">" + (isTeacher() ? "Handledning, talk track, quiz med facit, elevlektion, kapitel och G–VG–IG." : "Lektion → kapitel → bildspel → quiz.") + "</p>";
+      html += "<div class=\"week-hero\">" + stationHtml("V" + info.cal, "week-num active") + lozengeHtml(info.m) + "<div><h2>" + esc(info.name) + "</h2></div></div>";
+      html += "<p class=\"lead\">" + (isTeacher() ? "Handledning, talk track, quiz med facit, elevlektion, kapitel och G–VG–IG." : "Lektion · kapitel · bildspel · quiz.") + "</p>";
       html += modulePathHtml(idx);
       html += hubTurn(id);
     } else {
       hubs = calHubs(cal);
       if (!hubs.length) { showBlocked(); return; }
-      html += "<div class=\"week-hero\"><span class=\"week-num\">" + cal + "</span><div><h2>Vecka " + cal + "</h2></div></div>";
+      html += "<div class=\"week-hero\">" + stationHtml("V" + cal, "week-num active");
+      html += "<span class=\"lozenge-row\">";
+      for (var hi = 0; hi < hubs.length; hi++) html += lozengeHtml(MODULES[hubIndex(hubs[hi])].m);
+      if (hubs.length > 1) html += "<span class=\"xfer\">byte</span>";
+      html += "</span>";
+      html += "<div><h2>Vecka " + cal + "</h2></div></div>";
       html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
       if (cal === "9" && isStudent()) html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
       if (cal === "8") html += "<p class=\"mini-links\"><a href=\"#/labbdag\">Labbdag efter vecka 8</a></p>";
@@ -681,7 +718,7 @@
     var html = "";
     html += "<p class=\"kicker\">Lärare</p>";
     html += "<h2>Så här kör du veckan</h2>";
-    html += "<p class=\"lead\">Nio kalenderveckor på distans. Klistra Classroom-inlägget rakt in i Google Classroom. Bildspelets notes är talk track. En fysisk labbdag efter vecka 8.</p>";
+    html += "<p class=\"lead\">Nio stationer V1–V9 på distans. Stam = linjer M01–M12. Klistra Classroom-inlägget rakt in i Google Classroom. Bildspelets notes är talk track. En fysisk labbdag efter V8.</p>";
     html += "<ul class=\"how-list\">";
     html += "<li>Öppna veckan. Läs handledningen. Klistra inlägget i Classroom.</li>";
     html += "<li>Kör 16 slides. Säg det som står under Notes.</li>";
@@ -690,8 +727,8 @@
     html += "<li>Betyg IG/G/VG. 1 MΩ är upplysning, inte skall.</li>";
     html += "</ul>";
     html += "<div class=\"cta-row\">";
-    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Kör vecka 1</strong><span>Elsäkerhet och stötar</span></a>";
-    html += "<a class=\"cta\" href=\"#/korschema\"><strong>Körschema</strong><span>Nio veckor + labbdag</span></a>";
+    html += "<a class=\"cta\" href=\"#/vecka/1\">" + stationHtml("V1", "week-num") + "<span><strong>Kör V1</strong><span>Elsäkerhet och stötar</span></span></a>";
+    html += "<a class=\"cta\" href=\"#/korschema\"><strong>Körschema</strong><span>Nio stationer + labbdag</span></a>";
     html += "</div>";
     html += weekGridHtml();
     html += "<p class=\"foot-note\">Labbdag efter vecka 8. Skriftligt prov i vecka 9. Facit bara här.</p>";
@@ -717,7 +754,11 @@
     };
     for (var i = 0; i < CAL_IDS.length; i++) {
       var cal = CAL_IDS[i];
-      html += "<tr><td><a href=\"#/vecka/" + cal + "\">Vecka " + cal + "</a></td><td>" + esc(weekNames(cal)) + "</td><td>" + esc(tips[cal] || "") + "</td></tr>";
+      html += "<tr><td><a href=\"#/vecka/" + cal + "\">" + stationHtml("V" + cal, "week-num") + " Vecka " + cal + "</a></td><td>";
+      var mods = calModules(cal);
+      for (var mi = 0; mi < mods.length; mi++) html += lozengeHtml(mods[mi].m) + " ";
+      if (mods.length > 1) html += "<span class=\"xfer\">byte</span> ";
+      html += esc(weekNames(cal)) + "</td><td>" + esc(tips[cal] || "") + "</td></tr>";
     }
     html += "</tbody></table>";
     html += "<article class=\"card ticket\" style=\"margin-top:1.2rem\"><p class=\"kicker\">En fysisk dag</p><h3>Labbdag efter vecka 8</h3><p class=\"path-line\">Varv. Titta, inte live-wire. En dag.</p><p class=\"mini-links\"><a href=\"#/labbdag\">Öppna labbdagen</a></p></article>";
@@ -753,7 +794,7 @@
     var by = {};
     WEEKS[idx].items.forEach(function (it) { by[classify(it)] = it; });
     setNav("vecka");
-    setBar("<div class=\"bar-inner\"><span><a href=\"#/vecka/" + info.cal + "\">Vecka " + info.hub + "</a> · G–VG–IG</span></div>");
+    setBar("<div class=\"bar-inner\"><span>" + stationHtml("V" + info.cal) + " " + lozengeHtml(info.m) + " G–VG–IG</span></div>");
     function paint(grades, facitNote) {
       var html = "<p class=\"kicker\">Säg så här</p><h2>" + esc(info.name) + "</h2>";
       html += "<p class=\"lead\">Läs upp målen. Klistra inte lagtext. 1 MΩ är inte skall.</p>";
@@ -798,6 +839,7 @@
       var c = ch[i];
       var done = isVisited(c.path) ? " <span class=\"check\">✓</span>" : "";
       html += "<li><a class=\"card chapter-row\" href=\"#/" + c.path + "\">";
+      html += lozengeHtml(MODULES[c.weekIdx].m);
       html += "<span class=\"n\">" + c.n + "</span>";
       html += "<img class=\"thumb\" src=\"" + c.figure + "\" alt=\"" + esc(c.caption) + "\">";
       html += "<span class=\"step-body\"><span class=\"step-k\">Kapitel " + c.n + "</span><h3>" + esc(c.title) + done + "</h3></span>";
@@ -812,7 +854,7 @@
     if (isTeacher()) { showFacitHub(); return; }
     setNav("prov");
     setBar("");
-    var html = "<p class=\"kicker\">Vecka 9</p><h2>Prov</h2>";
+    var html = "<p class=\"kicker\">" + stationHtml("V9") + " Prov</p><h2>Prov</h2>";
     html += "<p class=\"lead\">Skriftligt prov. Bara elevbladet. Facit ligger inte här.</p>";
     html += "<div class=\"prov-grid\">";
     html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-elev.md\"><span class=\"step-k\">Prov</span><h3>Skriftligt prov</h3></a>";
@@ -834,12 +876,19 @@
       else if (isTeacher()) nextHref = "#/vecka/" + loc.mod.hub + "/betyg";
       else if (loc.weekIdx + 1 < WEEKS.length) nextHref = "#/vecka/" + MODULES[loc.weekIdx + 1].hub;
       else nextHref = "#/prov";
-      var left = "<a href=\"#/vecka/" + loc.mod.hub + "\">Vecka " + loc.mod.hub + "</a> · Steg " + loc.step + "/" + loc.total;
-      return "<div class=\"bar-inner\"><span>" + left + "</span><a href=\"" + nextHref + "\">Nästa →</a></div>";
+      var left = "<a href=\"#/vecka/" + loc.mod.hub + "\">" + stationHtml("V" + loc.mod.cal) + "</a> " + lozengeHtml(loc.mod.m) + " " + esc(loc.mod.name) + " · Steg " + loc.step + "/" + loc.total;
+      return "<div class=\"bar-inner\"><span>" + left + "</span><a href=\"" + nextHref + "\">Nästa station</a></div>";
     }
     if (/labbdag/i.test(path)) return "<div class=\"bar-inner\"><span>Labbdag</span></div>";
     if (/prov/i.test(path) || hasFacit(path)) return "<div class=\"bar-inner\"><span><a href=\"" + (isTeacher() ? "#/facit" : "#/prov") + "\">Prov</a></span></div>";
-    if (path.indexOf("bok/") === 0) return "<div class=\"bar-inner\"><span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></span></div>";
+    if (path.indexOf("bok/") === 0) {
+      var chapBar = chapterOf(path);
+      if (chapBar) {
+        var bmod = MODULES[chapBar.weekIdx];
+        return "<div class=\"bar-inner\"><span>" + stationHtml("V" + chapBar.cal) + " " + lozengeHtml(bmod.m) + " " + esc(bmod.chap) + "</span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></div>";
+      }
+      return "<div class=\"bar-inner\"><span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></span></div>";
+    }
     return "";
   }
   function renderQuiz(parsed, path) {
@@ -921,10 +970,10 @@
     for (i = 0; i < chs.length; i++) if (chs[i].path === path) idx = i;
     if (idx < 0) return "";
     var html = "<nav class=\"chap-nav\">";
-    html += idx > 0 ? "<a href=\"#/" + chs[idx - 1].path + "\">← Kapitel " + chs[idx - 1].n + "</a>" : "<span></span>";
-    html += idx < chs.length - 1 ? "<a href=\"#/" + chs[idx + 1].path + "\">Kapitel " + chs[idx + 1].n + " →</a>" : "<span></span>";
+    html += idx > 0 ? "<a href=\"#/" + chs[idx - 1].path + "\">Föregående station · " + chs[idx - 1].n + "</a>" : "<span></span>";
+    html += idx < chs.length - 1 ? "<a href=\"#/" + chs[idx + 1].path + "\">Nästa station · " + chs[idx + 1].n + "</a>" : "<span></span>";
     html += "</nav>";
-    if (!isBook()) html += "<p class=\"toc-extra\"><a href=\"#/vecka/" + chs[idx].cal + "\">Till vecka " + chs[idx].cal + "</a> · <a href=\"#/bok\">Boken</a></p>";
+    if (!isBook()) html += "<p class=\"toc-extra\"><a href=\"#/vecka/" + chs[idx].cal + "\">Till V" + chs[idx].cal + "</a> · <a href=\"#/bok\">Boken</a></p>";
     else html += "<p class=\"toc-extra\"><a href=\"#/innehall\">Innehåll</a></p>";
     return html;
   }
@@ -949,6 +998,10 @@
       var item = findItem(path);
       var chap = chapterOf(path);
       var fig = chap || (item && item.figure ? item : null);
+      if (chap) {
+        var cmod = MODULES[chap.weekIdx];
+        html += "<p class=\"kicker chap-mark\">" + lozengeHtml(cmod.m) + " " + stationHtml("V" + chap.cal) + " " + esc(cmod.chap) + "</p>";
+      }
       if (fig && fig.figure) {
         html += "<figure class=\"figure\"><img src=\"" + fig.figure + "\" alt=\"" + esc(fig.caption || "") + "\">";
         if (fig.caption) html += "<figcaption>" + esc(fig.caption) + "</figcaption>";
@@ -979,7 +1032,7 @@
     setShell("elev");
     if (isBook()) { showBlocked(); return; }
     setNav("labbdag");
-    setBar("<div class=\"bar-inner\"><span>Labbdag · efter vecka 8</span></div>");
+    setBar("<div class=\"bar-inner\"><span>Labbdag · efter V8</span></div>");
     fetch("kurs/labbdag-v2.md").then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
       return res.text();
