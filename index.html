@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=sv>
+<html lang=sv data-shell=elev>
 <head>
   <meta charset=utf-8>
   <meta name=viewport content="width=device-width, initial-scale=1">
@@ -11,28 +11,27 @@
     <form class=gate-card id=gate-form>
       <p class=kicker>YH · Fartyg och automation</p>
       <h1>Elteknik och ellära</h1>
-      <p class=sub>45 poäng. Lås upp kursmaterialet.</p>
+      <p class=sub>45 poäng. Välj roll och lås upp.</p>
+      <p class=role-label>Roll</p>
+      <div class=role-picker role=radiogroup aria-label=Roll id=role-picker>
+        <button type=button class=role-btn data-role=student aria-pressed=false>Elev</button>
+        <button type=button class=role-btn data-role=teacher aria-pressed=false>Lärare</button>
+        <button type=button class=role-btn data-role=book aria-pressed=false>Bok</button>
+      </div>
       <label for=pw>Lösenord</label>
       <input id=pw name=password type=password autocomplete=current-password required>
       <button type=submit>Öppna</button>
-      <p id=gate-err class=err hidden>Fel lösenord.</p>
+      <p id=gate-err class=err hidden>Fel lösenord för den rollen.</p>
     </form>
   </div>
   <div id=app hidden>
     <header class=top>
       <div class=top-row>
         <div class=brand>
-          <p class=kicker>YH · 45 p</p>
+          <p class=kicker id=brand-kicker>YH · 45 p</p>
           <h1><a href="#/" id=home-link>Elteknik och ellära</a></h1>
         </div>
-        <nav class=top-nav id=top-nav aria-label=Huvudmeny>
-          <a href="#/" data-nav=start>Start</a>
-          <a href="#/kursen" data-nav=kursen>Kursen</a>
-          <a href="#/bok" data-nav=bok>Boken</a>
-          <a href="#/labbdag" data-nav=labbdag>Labbdag</a>
-          <a href="#/prov" data-nav=prov>Prov</a>
-          <button type=button class=ghost id=lock-btn>Lås</button>
-        </nav>
+        <nav class=top-nav id=top-nav aria-label=Huvudmeny></nav>
       </div>
       <div id=course-bar class=course-bar hidden></div>
     </header>

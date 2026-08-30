@@ -1,8 +1,13 @@
 "use strict";
 
 (function () {
-  var HASH = "4e225ca4509cd07305ae9336ff17706ea4f9af7cb6cfd8a17690bc0528fa61be";
+  var ROLES = {
+    student: { hash: "4e225ca4509cd07305ae9336ff17706ea4f9af7cb6cfd8a17690bc0528fa61be", label: "Elev" },
+    teacher: { hash: "0b19ce7a70145305c3b32e03fcf6de104e6c9ced29337ec17f73cca67720f235", label: "Lärare" },
+    book: { hash: "d307be2aec862a45fb7b29dac54f1753829a6972aa5b9a0df6b9f6a021110a89", label: "Bok" }
+  };
   var GATE_KEY = "elteknik-gate";
+  var ROLE_KEY = "elteknik-role";
 
   var WEEKS = [
     {
@@ -133,9 +138,11 @@
     {"label": "Classroom prov", "path": "kurs/lararhandledning/classroom-v-prov-vecka9.md"}
   ];
 
+
+  var EXTRA_FACIT = {"label": "Skriftligt prov (facit)", "path": "kurs/prov/skriftligt-prov-facit.md"};
   var PROGRESS_KEY = "elteknik-progress";
-  var STEP_ORDER = ["lektion", "bok", "slides", "quiz", "classroom"];
-  var STEP_NAME = { lektion: "Lektion", bok: "Bokkapitel", slides: "Bildspel", quiz: "Quiz", classroom: "Classroom-uppgift" };
+  var STEP_NAME = { lektion: "Lektion", bok: "Kapitel", slides: "Bildspel", quiz: "Quiz", classroom: "Lärarhandledning" };
+  var STUDENT_STEPS = ["lektion", "bok", "slides", "quiz"];
   var MODULES = [
     { hub: "1", cal: "1", m: "m1", name: "Elsäkerhet och stötar", chap: "Elsäkerhet, stötar" },
     { hub: "2", cal: "2", m: "m2", name: "Isolering före arbete", chap: "Isolering före arbete" },
@@ -161,19 +168,33 @@
   function sha256hex(str) {
     return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(toHex);
   }
-  function isOpen() { return sessionStorage.getItem(GATE_KEY) === "1"; }
-  function setOpen(v) {
-    if (v) sessionStorage.setItem(GATE_KEY, "1");
-    else sessionStorage.removeItem(GATE_KEY);
+  function getRole() { return sessionStorage.getItem(ROLE_KEY) || ""; }
+  function isOpen() { return sessionStorage.getItem(GATE_KEY) === "1" && !!ROLES[getRole()]; }
+  function setSession(role) {
+    sessionStorage.setItem(GATE_KEY, "1");
+    sessionStorage.setItem(ROLE_KEY, role);
+  }
+  function clearSession() {
+    sessionStorage.removeItem(GATE_KEY);
+    sessionStorage.removeItem(ROLE_KEY);
+  }
+  function isTeacher() { return getRole() === "teacher"; }
+  function isStudent() { return getRole() === "student"; }
+  function isBook() { return getRole() === "book"; }
+  function extraList() {
+    if (isTeacher()) return EXTRA.concat([EXTRA_FACIT]);
+    if (isStudent()) {
+      return EXTRA.filter(function (x) {
+        return x.path.indexOf("classroom") === -1 && !hasFacit(x.path);
+      });
+    }
+    return [];
   }
   function hasFacit(path) { return /facit/i.test(path || ""); }
-  function okPath(path) {
-    if (!path || hasFacit(path)) return false;
-    if (path.indexOf("..") !== -1) return false;
-    if (path.slice(-3).toLowerCase() !== ".md") return false;
-    if (path.indexOf("kurs/") !== 0 && path.indexOf("bok/") !== 0) return false;
-    if (path === "bok/kapitellista-v2.md") return true;
-    return !!findItem(path);
+  function isClassroomPost(path) {
+    path = path || "";
+    if (path.indexOf("-quiz.md") !== -1 || path.indexOf("-slides.md") !== -1) return false;
+    return /classroom-v/.test(path);
   }
   function hashPath() {
     var raw = (location.hash || "").replace(/^#\/?/, "");
@@ -206,6 +227,7 @@
     return s.slice(0, m.index).trim();
   }
   function scrubHtml(html) {
+    if (isTeacher()) return String(html || "");
     return String(html || "").replace(/href=("|')[^"']*facit[^"']*("|')/gi, "href=\"#/\"");
   }
   function mdHtml(md, path) {
@@ -225,7 +247,7 @@
     catch (e) { return {}; }
   }
   function markVisited(path) {
-    if (!path) return;
+    if (!path || !isStudent()) return;
     var p = getProgress();
     p[path] = 1;
     localStorage.setItem(PROGRESS_KEY, JSON.stringify(p));
@@ -243,7 +265,8 @@
   function orderedSteps(week) {
     var by = {};
     (week.items || []).forEach(function (it) { by[classify(it)] = it; });
-    return STEP_ORDER.map(function (k) { return by[k]; }).filter(Boolean);
+    var order = isTeacher() ? ["classroom", "slides", "quiz", "lektion", "bok"] : STUDENT_STEPS;
+    return order.map(function (k) { return by[k]; }).filter(Boolean);
   }
   function hubIndex(hub) {
     for (var i = 0; i < MODULES.length; i++) if (MODULES[i].hub === hub) return i;
@@ -255,14 +278,15 @@
     return out;
   }
   function findItem(path) {
-    var i, j;
+    var i, j, extra;
     for (i = 0; i < WEEKS.length; i++) {
       for (j = 0; j < WEEKS[i].items.length; j++) {
         if (WEEKS[i].items[j].path === path) return WEEKS[i].items[j];
       }
     }
-    for (i = 0; i < EXTRA.length; i++) {
-      if (EXTRA[i].path === path) return EXTRA[i];
+    extra = extraList();
+    for (i = 0; i < extra.length; i++) {
+      if (extra[i].path === path) return extra[i];
     }
     return null;
   }
@@ -276,8 +300,9 @@
         }
       }
     }
-    for (i = 0; i < EXTRA.length; i++) {
-      if (EXTRA[i].path === path) return { extra: EXTRA[i], item: EXTRA[i] };
+    var extra = extraList();
+    for (i = 0; i < extra.length; i++) {
+      if (extra[i].path === path) return { extra: extra[i], item: extra[i] };
     }
     return { item: findItem(path) };
   }
@@ -300,6 +325,35 @@
       }
     }
     return out;
+  }
+  function okPath(path) {
+    if (!path || path.indexOf("..") !== -1) return false;
+    if (path.slice(-3).toLowerCase() !== ".md") return false;
+    if (path.indexOf("kurs/") !== 0 && path.indexOf("bok/") !== 0) return false;
+    if (hasFacit(path) && !isTeacher()) return false;
+    if (isBook()) {
+      if (path === "bok/kapitellista-v2.md") return true;
+      return path.indexOf("bok/") === 0 && (!!findItem(path) || !!chapterOf(path));
+    }
+    if (path === "bok/kapitellista-v2.md") return !isBook() || true;
+    if (isStudent()) {
+      if (isClassroomPost(path)) return false;
+      if (path === "kurs/labbdag-v2.md") return true;
+      if (path === "kurs/prov/skriftligt-prov-elev.md") return true;
+      if (path === "kurs/kurskarta/kurskarta-v2.md") return true;
+      if (path === "bok/kapitellista-v2.md") return true;
+      var it = findItem(path);
+      if (!it) return false;
+      var k = classify(it);
+      return k === "lektion" || k === "bok" || k === "slides" || k === "quiz";
+    }
+    if (isTeacher()) {
+      if (path === "bok/kapitellista-v2.md") return true;
+      if (path === "kurs/prov/skriftligt-prov-facit.md") return true;
+      if (path === "kurs/labbdag-v2.md") return true;
+      return !!findItem(path);
+    }
+    return false;
   }
   function parseQuiz(md) {
     var split = String(md || "").split(/^## Facit/im);
@@ -347,7 +401,7 @@
       if (!answers[num]) return null;
       questions.push({ n: num, prompt: prompt.join("\n").trim(), options: options, answer: answers[num] });
     }
-    return { intro: body.slice(0, idxs[0].start).trim(), questions: questions };
+    return { intro: body.slice(0, idxs[0].start).trim(), questions: questions, facitMd: facit.trim() };
   }
   function parseSlides(md) {
     var parts = String(md || "").split(/^## Slide\s+/im);
@@ -365,21 +419,88 @@
     }
     return slides.length ? slides : null;
   }
+  function parseGrades(md) {
+    var found = { g: "", vg: "", ig: "" };
+    var lines = String(md || "").split("\n");
+    var cur = null, buf = [];
+    function flush() {
+      var t = buf.join(" ").replace(/\s+/g, " ").trim();
+      if (cur && t) found[cur] = t;
+    }
+    for (var i = 0; i < lines.length; i++) {
+      var gm = lines[i].match(/^\*\*(G|VG[^*]*|IG):\*\*\s*(.*)$/);
+      if (gm) {
+        flush();
+        buf = [];
+        var key = gm[1].toUpperCase().indexOf("VG") === 0 ? "vg" : gm[1].toLowerCase();
+        cur = key;
+        if (gm[2]) buf.push(gm[2]);
+      } else if (cur) {
+        if (/^## /.test(lines[i]) || /^\*\*[A-ZÅÄÖ]/.test(lines[i]) || /^\|/.test(lines[i])) {
+          flush(); cur = null; buf = [];
+        } else if (lines[i].trim()) buf.push(lines[i].trim());
+      }
+    }
+    flush();
+    if (!found.g && !found.vg && !found.ig) return null;
+    return found;
+  }
   function setBar(html) {
     var bar = byId("course-bar");
     if (!html) { bar.hidden = true; bar.innerHTML = ""; return; }
     bar.hidden = false;
     bar.innerHTML = html;
   }
-  function setNav(active) {
+  function navItems() {
+    if (isTeacher()) {
+      return [
+        { href: "#/", nav: "vecka", label: "Vecka" },
+        { href: "#/korschema", nav: "korschema", label: "Körschema" },
+        { href: "#/facit", nav: "facit", label: "Facit" },
+        { href: "#/labbdag", nav: "labbdag", label: "Labbdag" }
+      ];
+    }
+    if (isBook()) {
+      return [
+        { href: "#/", nav: "omslag", label: "Omslag" },
+        { href: "#/innehall", nav: "innehall", label: "Innehåll" }
+      ];
+    }
+    return [
+      { href: "#/", nav: "start", label: "Start" },
+      { href: "#/kursen", nav: "kursen", label: "Kursen" },
+      { href: "#/bok", nav: "bok", label: "Boken" },
+      { href: "#/labbdag", nav: "labbdag", label: "Labbdag" },
+      { href: "#/prov", nav: "prov", label: "Prov" }
+    ];
+  }
+  function paintNav(active) {
     var nav = byId("top-nav");
     if (!nav) return;
-    var links = nav.querySelectorAll("a[data-nav]");
-    for (var i = 0; i < links.length; i++) {
-      if (links[i].getAttribute("data-nav") === active) links[i].classList.add("active");
-      else links[i].classList.remove("active");
+    var html = "";
+    navItems().forEach(function (it) {
+      html += "<a href=\"" + it.href + "\" data-nav=\"" + it.nav + "\"" + (it.nav === active ? " class=\"active\"" : "") + ">" + it.label + "</a>";
+    });
+    html += "<button type=\"button\" class=\"ghost\" id=\"lock-btn\">Lås</button>";
+    nav.innerHTML = html;
+    var lock = byId("lock-btn");
+    if (lock) lock.addEventListener("click", lockNow);
+  }
+  function setNav(active) { paintNav(active); }
+  function applyChrome() {
+    var role = getRole();
+    document.documentElement.setAttribute("data-role", role);
+    if (role === "teacher") setShell("larare");
+    else if (role === "book") setShell("bok");
+    else setShell("elev");
+    var k = byId("brand-kicker");
+    if (k) {
+      if (role === "teacher") k.textContent = "Lärare · 45 p";
+      else if (role === "book") k.textContent = "Fartyg och automation";
+      else k.textContent = "YH · 45 p";
     }
   }
+  function setShell(name) { document.documentElement.setAttribute("data-shell", name); }
   function setMain(html, wide) {
     var el = byId("main");
     el.className = wide ? "main wide" : "main";
@@ -400,7 +521,7 @@
   }
   function miniLinks(idx) {
     var steps = orderedSteps(WEEKS[idx]);
-    var names = { lektion: "lektion", bok: "bokkapitel", slides: "bildspel", quiz: "quiz" };
+    var names = { lektion: "lektion", bok: "kapitel", slides: "bildspel", quiz: "quiz" };
     var html = "<div class=\"mini-links\">";
     steps.forEach(function (st) {
       var k = classify(st);
@@ -410,50 +531,61 @@
     html += "</div>";
     return html;
   }
-  function weekCardHtml(cal) {
-    var hubs = calHubs(cal);
-    var done = weekVisited(cal) ? " <span class=\"check\" title=\"Öppnad\">✓</span>" : "";
+  function weekNames(cal) {
+    return calHubs(cal).map(function (h) { return MODULES[hubIndex(h)].name; }).join(" · ");
+  }
+  function studentWeekCard(cal) {
+    var done = weekVisited(cal) ? " <span class=\"check\">✓</span>" : "";
     var html = "<article class=\"card week-card\">";
-    html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\"><h3>Vecka " + cal + done + "</h3></a>";
-    html += "<ul class=\"mods\">";
-    for (var i = 0; i < hubs.length; i++) {
-      var idx = hubIndex(hubs[i]);
-      var info = MODULES[idx];
-      html += "<li><span class=\"mod-id\">" + info.m + "</span> " + esc(info.name) + miniLinks(idx) + "</li>";
-    }
-    html += "</ul>";
-    if (String(cal) === "9") html += "<p class=\"mini-links\"><a href=\"#/prov\">prov</a></p>";
-    html += "</article>";
+    html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\">";
+    html += "<span class=\"week-num\">" + cal + "</span>";
+    html += "<h3>Vecka " + cal + done + "</h3>";
+    html += "<p class=\"path-line\">Lektion → Kapitel → Bildspel → Quiz</p>";
+    html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
+    html += "</a></article>";
+    return html;
+  }
+  function teacherWeekCard(cal) {
+    var html = "<article class=\"card week-card\">";
+    html += "<a class=\"week-title\" href=\"#/vecka/" + cal + "\">";
+    html += "<span class=\"week-num\">" + cal + "</span>";
+    html += "<h3>Vecka " + cal + "</h3>";
+    html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
+    html += "<p class=\"path-line\">Handledning · Bildspel · Quiz · Lektion · Kapitel · G–VG–IG</p>";
+    html += "</a></article>";
     return html;
   }
   function weekGridHtml() {
     var html = "<div class=\"week-grid\">";
-    for (var i = 0; i < CAL_IDS.length; i++) html += weekCardHtml(CAL_IDS[i]);
+    for (var i = 0; i < CAL_IDS.length; i++) {
+      html += isTeacher() ? teacherWeekCard(CAL_IDS[i]) : studentWeekCard(CAL_IDS[i]);
+    }
     html += "</div>";
     return html;
   }
-  function showHome() {
+  function showStudentHome() {
+    setShell("elev");
     setNav("start");
     setBar("");
     var html = "";
     html += "<p class=\"kicker\">YH-kurs · Distans</p>";
-    html += "<h2>Elteknik och ellära · Fartyg och automation · 45 p</h2>";
-    html += "<p class=\"lead\">Nio kalenderveckor. Tolv moduler. En fysisk labbdag efter vecka 8.</p>";
+    html += "<h2>Elteknik och ellära</h2>";
+    html += "<p class=\"lead\">Nio kalenderveckor. Tolv moduler. 45 poäng. En fysisk labbdag efter vecka 8.</p>";
     html += "<div class=\"cta-row\">";
-    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Starta kursen</strong><span>Vecka 1 · Elsäkerhet och stötar</span></a>";
-    html += "<a class=\"cta\" href=\"#/bok\"><strong>Läs boken</strong><span>Tolv kapitel med figurer</span></a>";
+    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Starta vecka 1</strong><span>Elsäkerhet och stötar</span></a>";
+    html += "<a class=\"cta\" href=\"#/bok\"><strong>Läs boken</strong><span>Tolv kapitel som stöd</span></a>";
     html += "</div>";
     html += weekGridHtml();
-    html += "<p class=\"foot-note\">Distansundervisning. Labbdag efter vecka 8. Betyg IG/G/VG. Facit ligger inte på den här sajten.</p>";
+    html += "<article class=\"card ticket\" style=\"margin-top:1.2rem\"><p class=\"kicker\">Biljett</p><h3>Labbdag</h3><p class=\"path-line\">Efter vecka 8. En fysisk dag. Titta, inte live-wire.</p><p class=\"mini-links\"><a href=\"#/labbdag\">Öppna biljetten</a></p></article>";
+    html += "<p class=\"foot-note\">Betyg IG/G/VG. 1 MΩ är upplysning, inte skall. Facit ligger inte på elevsidan.</p>";
     setMain(html, true);
   }
-  function showCourse() {
+  function showStudentCourse() {
+    setShell("elev");
     setNav("kursen");
     setBar("");
-    var html = "";
-    html += "<p class=\"kicker\">Kursen</p>";
-    html += "<h2>Nio veckor, tolv moduler</h2>";
-    html += "<p class=\"lead\">Varje vecka är en väg: lektion, bokkapitel, bildspel, quiz och Classroom-uppgift.</p>";
+    var html = "<p class=\"kicker\">Kursen</p><h2>Nio veckor</h2>";
+    html += "<p class=\"lead\">Varje vecka: lektion, kapitel, bildspel, quiz.</p>";
     html += weekGridHtml();
     html += "<p class=\"toc-extra\"><a href=\"#/kurs/kurskarta/kurskarta-v2.md\">Kurskarta</a></p>";
     setMain(html, true);
@@ -468,6 +600,14 @@
     html += "</a>";
     return html;
   }
+  function teacherBetygCard(idx, n) {
+    var info = MODULES[idx];
+    var html = "<a class=\"card step-card\" href=\"#/vecka/" + info.hub + "/betyg\">";
+    html += "<span class=\"step-n\">" + n + "</span>";
+    html += "<span class=\"step-body\"><span class=\"step-k\">Säg så här</span><strong>G · VG · IG</strong></span>";
+    html += "</a>";
+    return html;
+  }
   function modulePathHtml(idx) {
     var info = MODULES[idx];
     var steps = orderedSteps(WEEKS[idx]);
@@ -475,6 +615,7 @@
     html += "<h3><span class=\"mod-id\">" + info.m + "</span> " + esc(info.name) + "</h3>";
     html += "<ol class=\"path\">";
     for (var i = 0; i < steps.length; i++) html += "<li>" + stepCardHtml(steps[i], i + 1) + "</li>";
+    if (isTeacher()) html += "<li>" + teacherBetygCard(idx, steps.length + 1) + "</li>";
     html += "</ol></div>";
     return html;
   }
@@ -491,7 +632,7 @@
     var prevL = i > 0 ? "Vecka " + CAL_IDS[i - 1] : "Start";
     var nextH, nextL;
     if (i < CAL_IDS.length - 1) { nextH = "#/vecka/" + CAL_IDS[i + 1]; nextL = "Vecka " + CAL_IDS[i + 1]; }
-    else { nextH = "#/prov"; nextL = "Prov"; }
+    else { nextH = isTeacher() ? "#/facit" : "#/prov"; nextL = isTeacher() ? "Facit" : "Prov"; }
     return turnHtml(prevH, prevL, nextH, nextL);
   }
   function hubTurn(hub) {
@@ -500,46 +641,158 @@
     var prevL = i > 0 ? "Vecka " + HUB_IDS[i - 1] : "Start";
     var nextH, nextL;
     if (i < HUB_IDS.length - 1) { nextH = "#/vecka/" + HUB_IDS[i + 1]; nextL = "Vecka " + HUB_IDS[i + 1]; }
-    else { nextH = "#/prov"; nextL = "Prov"; }
+    else { nextH = isTeacher() ? "#/facit" : "#/prov"; nextL = isTeacher() ? "Facit" : "Prov"; }
     return turnHtml(prevH, prevL, nextH, nextL);
   }
   function showWeek(id) {
+    setShell(isTeacher() ? "larare" : "elev");
     var isB = /b$/.test(id);
     var cal = String(id).replace(/b$/, "");
     if (CAL_IDS.indexOf(cal) === -1 && hubIndex(id) === -1) { showBlocked(); return; }
     markVisited("vecka/" + id);
-    setNav("kursen");
+    setNav(isTeacher() ? "vecka" : "kursen");
     setBar("");
-    var html = "<p class=\"kicker\">Kursen</p>";
+    var html = "<p class=\"kicker\">" + (isTeacher() ? "Så här kör du veckan" : "Kursen") + "</p>";
     var hubs;
     if (isB || hubIndex(id) !== -1 && calHubs(cal).length === 1) {
       var idx = hubIndex(id);
       if (idx < 0) { showBlocked(); return; }
       var info = MODULES[idx];
-      html += "<h2>Vecka " + id + " · " + esc(info.name) + "</h2>";
-      html += "<p class=\"lead\">Fem steg. Öppna ett kort för innehållet.</p>";
+      html += "<div class=\"week-hero\"><span class=\"week-num\">" + id + "</span><div><h2>" + esc(info.name) + "</h2></div></div>";
+      html += "<p class=\"lead\">" + (isTeacher() ? "Handledning, talk track, quiz med facit, elevlektion, kapitel och G–VG–IG." : "Lektion → kapitel → bildspel → quiz.") + "</p>";
       html += modulePathHtml(idx);
       html += hubTurn(id);
     } else {
       hubs = calHubs(cal);
       if (!hubs.length) { showBlocked(); return; }
-      html += "<h2>Vecka " + cal + "</h2>";
-      var names = hubs.map(function (h) { var m = MODULES[hubIndex(h)]; return m.m + " " + m.name; });
-      html += "<p class=\"lead\">" + esc(names.join(" · ")) + ". Fem steg per modul.</p>";
-      if (cal === "9") html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
+      html += "<div class=\"week-hero\"><span class=\"week-num\">" + cal + "</span><div><h2>Vecka " + cal + "</h2></div></div>";
+      html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
+      if (cal === "9" && isStudent()) html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
+      if (cal === "8") html += "<p class=\"mini-links\"><a href=\"#/labbdag\">Labbdag efter vecka 8</a></p>";
       for (var i = 0; i < hubs.length; i++) html += modulePathHtml(hubIndex(hubs[i]));
       html += calTurn(cal);
     }
     setMain(html, true);
   }
-  function showBook() {
-    setNav("bok");
+  function showTeacherHome() {
+    setShell("larare");
+    setNav("vecka");
+    setBar("");
+    var html = "";
+    html += "<p class=\"kicker\">Lärare</p>";
+    html += "<h2>Så här kör du veckan</h2>";
+    html += "<p class=\"lead\">Nio kalenderveckor på distans. Klistra Classroom-inlägget rakt in i Google Classroom. Bildspelets notes är talk track. En fysisk labbdag efter vecka 8.</p>";
+    html += "<ul class=\"how-list\">";
+    html += "<li>Öppna veckan. Läs handledningen. Klistra inlägget i Classroom.</li>";
+    html += "<li>Kör 16 slides. Säg det som står under Notes.</li>";
+    html += "<li>Quiz med facit i lärarpanelen. Inte i elevenkäten.</li>";
+    html += "<li>Elevlektion och matchande bokkapitel som stöd.</li>";
+    html += "<li>Betyg IG/G/VG. 1 MΩ är upplysning, inte skall.</li>";
+    html += "</ul>";
+    html += "<div class=\"cta-row\">";
+    html += "<a class=\"cta\" href=\"#/vecka/1\"><strong>Kör vecka 1</strong><span>Elsäkerhet och stötar</span></a>";
+    html += "<a class=\"cta\" href=\"#/korschema\"><strong>Körschema</strong><span>Nio veckor + labbdag</span></a>";
+    html += "</div>";
+    html += weekGridHtml();
+    html += "<p class=\"foot-note\">Labbdag efter vecka 8. Skriftligt prov i vecka 9. Facit bara här.</p>";
+    setMain(html, true);
+  }
+  function showKorschema() {
+    setShell("larare");
+    setNav("korschema");
+    setBar("");
+    var html = "<p class=\"kicker\">Kalender</p><h2>Körschema</h2>";
+    html += "<p class=\"lead\">Tolv moduler på nio kalenderveckor. Distans i Classroom. En fysisk dag efter vecka 8.</p>";
+    html += "<table class=\"cal-table\"><thead><tr><th>Vecka</th><th>Moduler</th><th>Gör så här</th></tr></thead><tbody>";
+    var tips = {
+      "1": "Klistra inlägget. 16 slides. Quiz skall vs upplysning.",
+      "2": "Isolering. Inte 1 MΩ som lag.",
+      "3": "Resistiv DC. Mätning och räkning.",
+      "4": "Enfas AC.",
+      "5": "Trefas och spänningstyper ombord.",
+      "6": "Maskiner.",
+      "7": "Två moduler: eltavla och verktyg.",
+      "8": "Ritningar och hållkrets. Därefter labbdag.",
+      "9": "Elarbete/IP och felsökning. Skriftligt prov."
+    };
+    for (var i = 0; i < CAL_IDS.length; i++) {
+      var cal = CAL_IDS[i];
+      html += "<tr><td><a href=\"#/vecka/" + cal + "\">Vecka " + cal + "</a></td><td>" + esc(weekNames(cal)) + "</td><td>" + esc(tips[cal] || "") + "</td></tr>";
+    }
+    html += "</tbody></table>";
+    html += "<article class=\"card ticket\" style=\"margin-top:1.2rem\"><p class=\"kicker\">En fysisk dag</p><h3>Labbdag efter vecka 8</h3><p class=\"path-line\">Varv. Titta, inte live-wire. En dag.</p><p class=\"mini-links\"><a href=\"#/labbdag\">Öppna labbdagen</a></p></article>";
+    setMain(html, true);
+  }
+  function showFacitHub() {
+    setShell("larare");
+    if (!isTeacher()) { showBlocked(); return; }
+    setNav("facit");
+    setBar("");
+    var html = "<p class=\"kicker\">Lärare</p><h2>Facit</h2>";
+    html += "<p class=\"lead\">Skriftligt prov och quizfacit. Inte i Classroom mot elever.</p>";
+    html += "<div class=\"prov-grid\">";
+    html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-facit.md\"><span class=\"step-k\">Prov</span><h3>Skriftligt prov, facit</h3></a>";
+    html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-elev.md\"><span class=\"step-k\">Elevblad</span><h3>Skriftligt prov, elev</h3></a>";
+    html += "<a class=\"card\" href=\"#/kurs/lararhandledning/classroom-v-prov-vecka9.md\"><span class=\"step-k\">Classroom</span><h3>Provvecka, inlägg</h3></a>";
+    html += "</div>";
+    html += "<h3 style=\"margin-top:2rem\">Quizfacit per vecka</h3><div class=\"prov-grid\">";
+    for (var i = 0; i < WEEKS.length; i++) {
+      var q = WEEKS[i].items.filter(function (it) { return classify(it) === "quiz"; })[0];
+      if (!q) continue;
+      html += "<a class=\"card\" href=\"#/" + q.path + "\"><span class=\"step-k\">" + esc(WEEKS[i].title) + "</span><h3>" + esc(q.label) + "</h3></a>";
+    }
+    html += "</div>";
+    setMain(html, true);
+  }
+  function showBetyg(hub) {
+    setShell("larare");
+    if (!isTeacher()) { showBlocked(); return; }
+    var idx = hubIndex(hub);
+    if (idx < 0) { showBlocked(); return; }
+    var info = MODULES[idx];
+    var by = {};
+    WEEKS[idx].items.forEach(function (it) { by[classify(it)] = it; });
+    setNav("vecka");
+    setBar("<div class=\"bar-inner\"><span><a href=\"#/vecka/" + info.cal + "\">Vecka " + info.hub + "</a> · G–VG–IG</span></div>");
+    function paint(grades, facitNote) {
+      var html = "<p class=\"kicker\">Säg så här</p><h2>" + esc(info.name) + "</h2>";
+      html += "<p class=\"lead\">Läs upp målen. Klistra inte lagtext. 1 MΩ är inte skall.</p>";
+      html += "<div class=\"grades\">";
+      html += "<article class=\"card\"><h3>G</h3><p>" + esc((grades && grades.g) || "Målen i lektionen sitter. Säkerhetssvaren är rätt.") + "</p></article>";
+      html += "<article class=\"card\"><h3>VG</h3><p>" + esc((grades && grades.vg) || "G med egen motiverad bedömning.") + "</p></article>";
+      html += "<article class=\"card ig\"><h3>IG</h3><p>" + esc((grades && grades.ig) || "Säkerhetsfälla. JFB-jakt. 1 MΩ som lag.") + "</p></article>";
+      html += "</div>";
+      if (facitNote) html += "<aside class=\"facit-panel\"><h3>Quizspår</h3>" + mdHtml(facitNote, by.quiz ? by.quiz.path : "") + "</aside>";
+      html += "<p class=\"mini-links\"><a href=\"#/vecka/" + info.hub + "\">Tillbaka till veckan</a></p>";
+      setMain(html);
+    }
+    var waits = [];
+    if (by.lektion) waits.push(fetch(by.lektion.path).then(function (r) { return r.ok ? r.text() : ""; }));
+    else waits.push(Promise.resolve(""));
+    if (by.quiz) waits.push(fetch(by.quiz.path).then(function (r) { return r.ok ? r.text() : ""; }));
+    else waits.push(Promise.resolve(""));
+    Promise.all(waits).then(function (parts) {
+      paint(parseGrades(parts[0] || ""), parts[1] ? stripFacitToTail(parts[1]) : "");
+    }).catch(function () { paint(null, ""); });
+  }
+  function stripFacitToTail(md) {
+    var s = String(md || "");
+    var m = s.match(/^## Facit/im);
+    if (!m) return "";
+    return s.slice(m.index).trim();
+  }
+  function showBookHome(asCover) {
+    setShell("bok");
+    setNav(isBook() ? (asCover ? "omslag" : "innehall") : "bok");
     setBar("");
     var ch = allChapters();
-    var html = "<p class=\"kicker\">Boken</p>";
-    html += "<h2>Elteknik och ellära</h2>";
-    html += "<p class=\"lead\">Tolv kapitel. En figur per kapitel.</p>";
-    html += "<p class=\"toc-extra\"><a href=\"#/bok/kapitellista-v2.md\">Innehåll</a> · kapitellista</p>";
+    var html = "";
+    if (isBook() && asCover) {
+      html += "<section class=\"cover\"><p class=\"kicker\">Bok</p><h2>Elteknik och ellära</h2><p class=\"sub\">Fartyg och automation</p></section>";
+    } else {
+      html += "<p class=\"kicker\">Boken</p><h2>Tolv kapitel</h2><p class=\"lead\">En figur per kapitel. Stöd till kursen.</p>";
+    }
+    html += "<p class=\"toc-extra\"><a href=\"#/bok/kapitellista-v2.md\">Kapitellista</a></p>";
     html += "<ol class=\"chapter-list\">";
     for (var i = 0; i < ch.length; i++) {
       var c = ch[i];
@@ -554,35 +807,40 @@
     setMain(html, true);
   }
   function showProv() {
+    setShell("elev");
+    if (isBook()) { showBlocked(); return; }
+    if (isTeacher()) { showFacitHub(); return; }
     setNav("prov");
     setBar("");
     var html = "<p class=\"kicker\">Vecka 9</p><h2>Prov</h2>";
-    html += "<p class=\"lead\">Skriftligt prov. Facit ligger inte på den här sajten.</p>";
+    html += "<p class=\"lead\">Skriftligt prov. Bara elevbladet. Facit ligger inte här.</p>";
     html += "<div class=\"prov-grid\">";
-    html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-elev.md\"><span class=\"step-k\">Prov</span><h3>Skriftligt prov (elev)</h3></a>";
-    html += "<a class=\"card\" href=\"#/kurs/lararhandledning/classroom-v-prov-vecka9.md\"><span class=\"step-k\">Classroom</span><h3>Classroom-inlägg vecka 9</h3></a>";
+    html += "<a class=\"card\" href=\"#/kurs/prov/skriftligt-prov-elev.md\"><span class=\"step-k\">Prov</span><h3>Skriftligt prov</h3></a>";
     html += "</div>";
     setMain(html, true);
   }
   function showBlocked() {
-    setNav("");
     setBar("");
-    setMain("<p class=\"page-err\">Den sidan finns inte på studentsajten.</p>");
+    var msg = "Den sidan finns inte.";
+    if (isStudent()) msg = "Den sidan finns inte för elever. Facit är låst.";
+    if (isBook()) msg = "Bara boken i den här inloggningen.";
+    setMain("<p class=\"page-err\">" + msg + "</p>");
   }
   function courseBarFor(path) {
     var loc = locatePath(path);
     if (loc.mod) {
       var nextHref;
       if (loc.step < loc.total) nextHref = "#/" + loc.steps[loc.step].path;
+      else if (isTeacher()) nextHref = "#/vecka/" + loc.mod.hub + "/betyg";
       else if (loc.weekIdx + 1 < WEEKS.length) nextHref = "#/vecka/" + MODULES[loc.weekIdx + 1].hub;
       else nextHref = "#/prov";
       var left = "<a href=\"#/vecka/" + loc.mod.hub + "\">Vecka " + loc.mod.hub + "</a> · Steg " + loc.step + "/" + loc.total;
       return "<div class=\"bar-inner\"><span>" + left + "</span><a href=\"" + nextHref + "\">Nästa →</a></div>";
     }
-    if (/labbdag/i.test(path)) return "<div class=\"bar-inner\"><span>Labbdag</span><a href=\"#/kursen\">Till kursen →</a></div>";
-    if (/prov/i.test(path)) return "<div class=\"bar-inner\"><span><a href=\"#/prov\">Prov</a></span></div>";
-    if (path.indexOf("bok/") === 0) return "<div class=\"bar-inner\"><span><a href=\"#/bok\">Boken</a></span></div>";
-    return "<div class=\"bar-inner\"><span><a href=\"#/kursen\">Kursen</a></span></div>";
+    if (/labbdag/i.test(path)) return "<div class=\"bar-inner\"><span>Labbdag</span></div>";
+    if (/prov/i.test(path) || hasFacit(path)) return "<div class=\"bar-inner\"><span><a href=\"" + (isTeacher() ? "#/facit" : "#/prov") + "\">Prov</a></span></div>";
+    if (path.indexOf("bok/") === 0) return "<div class=\"bar-inner\"><span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></span></div>";
+    return "";
   }
   function renderQuiz(parsed, path) {
     var html = "<div class=\"quiz\" id=\"quiz-root\">";
@@ -597,6 +855,9 @@
       html += "</div><p class=\"q-fb\" hidden></p></div>";
     });
     html += "<p class=\"quiz-score\" hidden></p></div>";
+    if (isTeacher() && parsed.facitMd) {
+      html += "<aside class=\"facit-panel\" id=\"facit-panel\"><h3>Facit</h3>" + mdHtml("## Facit\n" + parsed.facitMd, path) + "</aside>";
+    }
     return html;
   }
   function bindQuiz() {
@@ -641,7 +902,7 @@
       var html = "<p class=\"deck-meta\">Bild " + (i + 1) + " av " + slides.length + "</p>";
       html += "<div class=\"slide\"><h2>Slide " + esc(s.heading) + "</h2>";
       html += "<div class=\"slide-body\">" + mdHtml(s.body, path) + "</div></div>";
-      if (s.notes) html += "<div class=\"notes\"><strong>Lärarnotis</strong>" + mdHtml(s.notes, path) + "</div>";
+      if (s.notes && isTeacher()) html += "<div class=\"notes\"><strong>Talk track</strong>" + mdHtml(s.notes, path) + "</div>";
       html += "<div class=\"deck-nav\">";
       html += "<button type=\"button\" class=\"ghost\" id=\"deck-prev\"" + (i === 0 ? " disabled" : "") + ">Föregående</button>";
       html += "<button type=\"button\" id=\"deck-next\"" + (i === slides.length - 1 ? " disabled" : "") + ">Nästa</button>";
@@ -663,15 +924,21 @@
     html += idx > 0 ? "<a href=\"#/" + chs[idx - 1].path + "\">← Kapitel " + chs[idx - 1].n + "</a>" : "<span></span>";
     html += idx < chs.length - 1 ? "<a href=\"#/" + chs[idx + 1].path + "\">Kapitel " + chs[idx + 1].n + " →</a>" : "<span></span>";
     html += "</nav>";
-    html += "<p class=\"toc-extra\"><a href=\"#/vecka/" + chs[idx].cal + "\">Till vecka " + chs[idx].cal + "</a> · <a href=\"#/bok\">Boken</a></p>";
+    if (!isBook()) html += "<p class=\"toc-extra\"><a href=\"#/vecka/" + chs[idx].cal + "\">Till vecka " + chs[idx].cal + "</a> · <a href=\"#/bok\">Boken</a></p>";
+    else html += "<p class=\"toc-extra\"><a href=\"#/innehall\">Innehåll</a></p>";
     return html;
   }
   function showDoc(path) {
-    if (hasFacit(path) || !okPath(path)) { showBlocked(); return; }
-    if (path.indexOf("bok/") === 0) setNav("bok");
+    if (!okPath(path)) { showBlocked(); return; }
+    if (path.indexOf("bok/") === 0) setShell("bok");
+    else if (path.indexOf("lararhandledning") !== -1 || path.indexOf("-slides.md") !== -1) setShell("larare");
+    else setShell("elev");
+    if (isBook()) setNav("innehall");
+    else if (path.indexOf("bok/") === 0) setNav("bok");
     else if (path.indexOf("labbdag") !== -1) setNav("labbdag");
-    else if (path.indexOf("prov") !== -1) setNav("prov");
-    else setNav("kursen");
+    else if (hasFacit(path)) setNav("facit");
+    else if (path.indexOf("prov") !== -1) setNav(isTeacher() ? "facit" : "prov");
+    else setNav(isTeacher() ? "vecka" : "kursen");
     setBar(courseBarFor(path));
     fetch(path).then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
@@ -691,7 +958,7 @@
       if (path.indexOf("-quiz.md") !== -1) {
         var quiz = parseQuiz(md);
         if (quiz) { html += renderQuiz(quiz, path); after = bindQuiz; }
-        else html += mdHtml(stripFacit(md), path);
+        else html += mdHtml(isTeacher() ? md : stripFacit(md), path);
       } else if (path.indexOf("-slides.md") !== -1) {
         var slides = parseSlides(md);
         if (slides) {
@@ -699,7 +966,7 @@
           after = function () { bindSlides(slides, path); };
         } else html += mdHtml(md, path);
       } else {
-        html += mdHtml(md, path);
+        html += mdHtml(isTeacher() ? md : stripFacit(md), path);
       }
       if (chap) html += chapterFooter(path);
       setMain(html);
@@ -709,39 +976,73 @@
     });
   }
   function showLab() {
+    setShell("elev");
+    if (isBook()) { showBlocked(); return; }
     setNav("labbdag");
-    setBar("<div class=\"bar-inner\"><span>Labbdag</span></div>");
+    setBar("<div class=\"bar-inner\"><span>Labbdag · efter vecka 8</span></div>");
     fetch("kurs/labbdag-v2.md").then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
       return res.text();
     }).then(function (md) {
       markVisited("kurs/labbdag-v2.md");
-      setMain(mdHtml(md, "kurs/labbdag-v2.md"));
+      var html = "<article class=\"card ticket\" style=\"margin-bottom:1.4rem\"><p class=\"kicker\">Biljett</p><h3>En fysisk dag</h3><p class=\"path-line\">Efter vecka 8. Varv. Titta, inte live-wire.</p></article>";
+      html += mdHtml(md, "kurs/labbdag-v2.md");
+      setMain(html);
     }).catch(function () {
       setMain("<p class=\"page-err\">Kunde inte läsa sidan.</p>");
     });
   }
   function route() {
+    applyChrome();
     var raw = hashPath();
-    if (hasFacit(raw)) { showBlocked(); return; }
-    if (!raw) { showHome(); return; }
-    if (raw === "kursen") { showCourse(); return; }
-    if (raw === "bok") { showBook(); return; }
+    if (hasFacit(raw) && !isTeacher()) { showBlocked(); return; }
+    if (isBook()) {
+      if (!raw) { showBookHome(true); return; }
+      if (raw === "innehall" || raw === "bok") { showBookHome(false); return; }
+      if (okPath(raw) && raw.indexOf("bok/") === 0) { showDoc(raw); return; }
+      showBlocked(); return;
+    }
+    if (isTeacher()) {
+      if (!raw) { showTeacherHome(); return; }
+      if (raw === "korschema") { showKorschema(); return; }
+      if (raw === "facit") { showFacitHub(); return; }
+      if (raw === "labbdag") { showLab(); return; }
+      if (raw === "bok" || raw === "innehall") { showBookHome(false); return; }
+      var tb = raw.match(/^vecka\/(\d+b?)\/betyg$/);
+      if (tb) { showBetyg(tb[1]); return; }
+      var tw = raw.match(/^vecka\/(\d+b?)$/);
+      if (tw) { showWeek(tw[1]); return; }
+      if (okPath(raw)) { showDoc(raw); return; }
+      showBlocked(); return;
+    }
+    if (!raw) { showStudentHome(); return; }
+    if (raw === "kursen") { showStudentCourse(); return; }
+    if (raw === "bok" || raw === "innehall") { showBookHome(false); return; }
     if (raw === "labbdag") { showLab(); return; }
     if (raw === "prov") { showProv(); return; }
-    var w = raw.match(/^vecka\/(\d+b?)$/);
-    if (w) { showWeek(w[1]); return; }
+    var sw = raw.match(/^vecka\/(\d+b?)$/);
+    if (sw) { showWeek(sw[1]); return; }
     if (okPath(raw)) { showDoc(raw); return; }
     showBlocked();
   }
   function showApp() {
+    applyChrome();
     byId("gate").hidden = true;
     byId("app").hidden = false;
+    paintNav("");
     route();
   }
   function showGate() {
     byId("gate").hidden = false;
     byId("app").hidden = true;
+    document.documentElement.removeAttribute("data-role");
+    document.documentElement.setAttribute("data-shell", "elev");
+  }
+  function lockNow() {
+    clearSession();
+    var pw = byId("pw");
+    if (pw) pw.value = "";
+    showGate();
   }
   function onHash() {
     if (!isOpen()) { showGate(); return; }
@@ -750,31 +1051,41 @@
   function initGate() {
     var form = byId("gate-form");
     var err = byId("gate-err");
+    var picker = byId("role-picker");
+    var chosen = "";
+    picker.addEventListener("click", function (e) {
+      var btn = e.target.closest ? e.target.closest(".role-btn") : null;
+      if (!btn) return;
+      chosen = btn.getAttribute("data-role") || "";
+      var btns = picker.querySelectorAll(".role-btn");
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].setAttribute("aria-pressed", btns[i] === btn ? "true" : "false");
+      }
+      err.hidden = true;
+    });
     form.addEventListener("submit", function (e) {
       e.preventDefault();
+      var role = chosen;
+      var spec = ROLES[role];
+      if (!spec) { err.hidden = false; return; }
       var pw = byId("pw").value.trim();
       sha256hex(pw).then(function (h) {
-        if (h === HASH) {
+        if (h === spec.hash) {
           err.hidden = true;
-          setOpen(true);
+          setSession(role);
           showApp();
         } else {
           err.hidden = false;
         }
       });
     });
-    byId("lock-btn").addEventListener("click", function () {
-      setOpen(false);
-      byId("pw").value = "";
-      showGate();
-    });
     byId("main").addEventListener("click", function (e) {
       var a = e.target.closest ? e.target.closest("a") : null;
       if (!a) return;
       var href = a.getAttribute("href") || "";
       var decoded = href;
-      try { decoded = decodeURIComponent(href); } catch (err) {}
-      if (hasFacit(href) || hasFacit(decoded)) {
+      try { decoded = decodeURIComponent(href); } catch (err2) {}
+      if (!isTeacher() && (hasFacit(href) || hasFacit(decoded))) {
         e.preventDefault();
         showBlocked();
       }
