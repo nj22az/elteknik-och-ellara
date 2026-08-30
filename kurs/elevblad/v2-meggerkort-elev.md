@@ -40,13 +40,13 @@ Samma grupp hela vägen. Referens är **skrov/stomme**, inte PE-skena.
 │  Grupp: 230 V inredning, kabel bytt               │
 │  Tid: före arbete, avställd grupp                 │
 │                                                    │
-│  Kedja — numrera 1–5 i ordning:                   │
+│  Kedja — skriv 1–5 i rutorna (rätt ordning):      │
 │                                                    │
-│    [ ] från                                        │
-│    [ ] lås / skylt                                 │
-│    [ ] tvåpol död                                  │
 │    [ ] megger                                      │
 │    [ ] protokoll                                   │
+│    [ ] tvåpol död                                  │
+│    [ ] från                                        │
+│    [ ] lås / skylt                                 │
 │                                                    │
 │  Referens:                                         │
 │    [ ] skrov / stomme                              │
