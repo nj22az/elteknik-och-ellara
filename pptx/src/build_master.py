@@ -62,7 +62,14 @@ def _set_srgb(parent, hex6: str):
     el.set("val", hex6)
 
 
-def patch_theme(prs: Presentation) -> None:
+def patch_theme(
+    prs: Presentation,
+    *,
+    accent1: str = "E6002D",
+    accent2: str = "F39700",
+    accent3: str = "1A1A1A",
+    accent4: str = "6B2D5B",
+) -> None:
     master = prs.slide_masters[0]
     theme_part = None
     for rel in master.part.rels.values():
@@ -82,10 +89,10 @@ def patch_theme(prs: Presentation) -> None:
     _set_srgb(scheme.find("a:lt1", ns), "FFFFFF")
     _set_srgb(scheme.find("a:dk2", ns), "111111")
     _set_srgb(scheme.find("a:lt2", ns), "FFFFFF")
-    _set_srgb(scheme.find("a:accent1", ns), "E6002D")  # M01
-    _set_srgb(scheme.find("a:accent2", ns), "F39700")  # M02
-    _set_srgb(scheme.find("a:accent3", ns), "1A1A1A")  # V1
-    _set_srgb(scheme.find("a:accent4", ns), "6B2D5B")  # V2
+    _set_srgb(scheme.find("a:accent1", ns), accent1)
+    _set_srgb(scheme.find("a:accent2", ns), accent2)
+    _set_srgb(scheme.find("a:accent3", ns), accent3)
+    _set_srgb(scheme.find("a:accent4", ns), accent4)
     _set_srgb(scheme.find("a:accent5", ns), "111111")
     _set_srgb(scheme.find("a:accent6", ns), "111111")
     _set_srgb(scheme.find("a:hlink", ns), "111111")

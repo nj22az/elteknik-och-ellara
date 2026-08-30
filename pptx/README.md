@@ -15,7 +15,7 @@ Widescreen 16:9. Svenska.
 
 Rebuild: `pptx/src/build_master.py` (after figures). Tokens in `pptx/src/v3_tokens.py` and `pptx/src/tokens.py`.
 
-Sample slides in the master (pattern only — **week decks vecka-01..09 are not restyled yet**):
+Sample slides in the master (pattern). **Week decks vecka-01..09 and `kurs-overblick.pptx` match this master (v3).**
 
 1. Title — Elteknik och ellära / YH · 45 p / Fartyg och automation; M01–M12 lozenge swatches
 2. Modul M01 Elsäkerhet (lozenge + name, V1)
@@ -47,6 +47,6 @@ Studentsajt: https://nj22az.github.io/elteknik-och-ellara/
 | `vecka-08.pptx` | vecka 8 | `classroom-v9-slides.md` sedan `classroom-v10-slides.md` (m9+m10) + figur 9.1 och 10.1 | 35 |
 | `vecka-09.pptx` | vecka 9 | `classroom-v11-slides.md` sedan `classroom-v12-slides.md` (m11+m12) + figur 11.1 och 12.1; sista slidarna = skriftligt prov, bara elevblad, inget facit | 39 |
 
-Varje veckodeck: veckotitel + en PPT-slide per `## Slide` + kursfigur efter modultiteln. **These week files still use the previous identity until restyled against v3.**
+Varje veckodeck: veckotitel + en PPT-slide per `## Slide` + kursfigur efter modultiteln. **These week files match v3** (IBM Plex Sans, M-lozenge + V-square, 0 radius). Speaker notes copied verbatim from the pre-restyle decks.
 
 `kurs-overblick.pptx`: titel, nio veckors kalender, tolv moduler, labbdag efter vecka 8, IG/G/VG, dual-entry elektriker mot fartygsingenjör, vad som inte ingår, studentsajt-URL.
