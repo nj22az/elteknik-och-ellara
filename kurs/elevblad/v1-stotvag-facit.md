@@ -1,9 +1,9 @@
 # Stötväg — facit
 
-**Till lärare. Inte i elevenkäten. Inte på elev-GitHub Pages.**
+**Till lärare. Inte till elev. Inte på elev-GitHub Pages.**
 `M01` Elsäkerhet · `V1` Vecka 1 · Elteknik och ellära 45 p
 
-G: STOP + stötväg hölje → kropp → skrov + två av tre fel.
+G: STOP, stötväg hölje → kropp → skrov, två av tre fel.
 IG: GO, handen först, JFB som skydd.
 
 ---
@@ -12,14 +12,14 @@ IG: GO, handen först, JFB som skydd.
 
 ```
 ████ FARA ██████████████████████████████████████████
-│  Känn inte efter på spänningssatt komponent.     │
+│  Känn inte efter på spänningssatt don.           │
 └──────────────────────────────────────────────────┘
 ```
 
 - [x] **STOP**
 - [ ] GO
 
-**Varför (en rad):** våt magnetventil kan vara spänningssatt; stötväg hölje → kropp → skrov.
+**Varför (en rad):** våt magnetventil kan bära spänning. Stötväg hölje → kropp → skrov.
 
 GO = IG.
 
@@ -51,15 +51,15 @@ GO = IG.
 
 Stötväg: **hölje → kropp → skrov**
 
-1  Stötväg in i hölje.  
-2  Genom kroppen.  
-3  Ut i skrov.
+1  In i höljet.
+2  Genom kroppen.
+3  Ut i skrovet.
 
 ---
 
 ## 3. Två fel ringade
 
-G = **två av tre**. Alla tre är giltiga. Visa minst dessa två:
+G = **två av tre**. Alla tre duger. Visa minst dessa två:
 
 ```
   ┌──────────────┐    ┌──────────────┐    ┌────────────────┐
@@ -67,17 +67,17 @@ G = **två av tre**. Alla tre är giltiga. Visa minst dessa två:
   └──────────────┘    └──────────────┘    └────────────────┘
 ```
 
-Tredje (utanför IR) räknas också. IG: noll ringade, eller JFB som “fel”.
+Tredje (utanför IR) räknas också. IG: inget ringat, eller JFB som “fel”.
 
 ---
 
-## 4. Dual-entry — en rad
+## 4. Två spår — en rad
 
-Elektriker = leta inte JFB.  
-Ingenjör = läckage vid spänningssatt komponent är elarbete.
+Elektriker = leta inte JFB.
+Ingenjör = läcker det vid spänningssatt don är det elarbete.
 
 Samma rad på båda spåren. Inte två prov.
 
 ---
 
-Inte Germanica-essä på det här bladet. Inte 1 MΩ. Inte megger.
+Inte skolessä. Inte 1 MΩ. Inte megger.

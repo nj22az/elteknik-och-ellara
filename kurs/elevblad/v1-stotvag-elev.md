@@ -1,7 +1,6 @@
 # Stötväg — elevblad
 
 `M01` Elsäkerhet · `V1` Vecka 1 · Elteknik och ellära 45 p
-IBM Plex Sans / Noto Sans / Arial. 0 radius. Tryck som pillerask.
 
 Namn: ______________________________  Datum: __________
 Spår: [ ] elektriker (land)   [ ] ingenjör (fartyg)   [ ] båda
@@ -16,8 +15,8 @@ Spår: [ ] elektriker (land)   [ ] ingenjör (fartyg)   [ ] båda
 └───────────────────────────────────────────────────┘
 ```
 
-Utrymme: pannrum. Komponent: pump + magnetventil. Stålskrov.
-Bedömning på papper. Ingen lucka. Ingen megger.
+Pannrum. Pump och magnetventil. Stålskrov.
+På papper. Du går inte till luckan. Du megger inte.
 
 ```
 ┌─ OBS ─────────────────────────────────────────────┐
@@ -29,7 +28,7 @@ Bedömning på papper. Ingen lucka. Ingen megger.
 
 ## 1. STOP eller GO
 
-Ordern säger: *känn efter var.* Kryssa **en** innan du ritar.
+Lappen säger: *känn efter var.* Kryssa **en**. Sen ritar du.
 
 ```
   ┌────────────┐              ┌────────────┐
@@ -44,7 +43,7 @@ Ordern säger: *känn efter var.* Kryssa **en** innan du ritar.
 
 ## 2. Figur — rita stötvägen
 
-Figuren är omärkt. Rita **hölje → kropp → skrov**. Inga färdiga stötvägsetiketter.
+Figuren är blank. Rita stötvägen: **hölje → kropp → skrov**.
 
 ```
           ┌─────────────────────────┐
@@ -74,7 +73,7 @@ Stötväg (fyll):  ________ →  ________ →  ________
 
 ## 3. Ring två fel
 
-Tre möjliga. Ring **två**. Lämna en orörd.
+Tre lappar. Ring **två** fel.
 
 ```
   ┌──────────────┐    ┌──────────────┐    ┌────────────────┐
@@ -84,11 +83,7 @@ Tre möjliga. Ring **två**. Lämna en orörd.
 
 ---
 
-## 4. Dual-entry — en rad
+## 4. Två spår — en rad
 
-Elektriker: leta inte JFB.  
-Ingenjör: läckage vid spänningssatt komponent är elarbete.
-
----
-
-Slut. Inte megger. Inte 1 MΩ. Inte EX, nödström, landström.
+Elektriker: leta inte JFB.
+Ingenjör: läcker det vid spänningssatt don är det elarbete.
