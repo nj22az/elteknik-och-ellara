@@ -71,15 +71,12 @@ Felsök hållkrets på 440-MSB?  [ ] STOP   [ ] GO
 
 ## Räkna
 
-24 V-spole, **120 Ω**.
+Patrik. **24 V**-spole, **120 Ω**. Styr, inte 440-last. På papper.
 
-Ström = spänning genom motstånd.  I = U / R.
+I = U / R = ______ A
 
-I = ______ A
-
-Styr ≠ 440 last.
-
-Elektriker: styr 24 V är inte last 440. / Ingenjör: schema innan knappen.
+Elektriker: styr 24 V är inte last 440.
+Ingenjör: räkna I i spolen innan du jagar MSB.
 
 ---
 

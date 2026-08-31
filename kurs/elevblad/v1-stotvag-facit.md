@@ -5,6 +5,7 @@
 
 G: STOP, stötväg hölje → kropp → skrov, två av tre fel.
 IG: GO, handen först, JFB som skydd.
+Räkna: I = 0,23 A.
 
 ---
 
@@ -73,13 +74,12 @@ Tredje (utanför IR) räknas också. IG: inget ringat, eller JFB som “fel”.
 
 ## Räkna
 
-Våt väg 1 kΩ. U = 230 V. I = U / R.
+I = U / R = 230 / 1000 = **0,23 A**.
 
-I = 230 / 1000 = **0,23 A**.
+Därför STOP innan du tar i. Inte kroppsmotståndstabell. Inte gore.
 
-Därför STOP innan du tar i.
-
-Elektriker: räkna I, sen handen. / Ingenjör: våt 230 är inte “känn efter”.
+Elektriker: det är därför STOP innan du tar i.
+Ingenjör: räkna I innan handen når höljet.
 
 ---
 

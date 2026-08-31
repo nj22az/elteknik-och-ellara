@@ -85,15 +85,12 @@ Tre lappar. Ring **två** fel.
 
 ## Räkna
 
-Våt väg **1 kΩ**. U = **230 V**.
+Fatima. Våt väg **1 kΩ**. Skåp **230 V**. På papper. Inte kroppstabell.
 
-Ström = spänning genom motstånd.  I = U / R.
+I = U / R = ______ A
 
-I = ______ A
-
-Därför STOP innan du tar i.
-
-Elektriker: räkna I, sen handen. / Ingenjör: våt 230 är inte “känn efter”.
+Elektriker: det är därför STOP innan du tar i.
+Ingenjör: räkna I innan handen når höljet.
 
 ---
 

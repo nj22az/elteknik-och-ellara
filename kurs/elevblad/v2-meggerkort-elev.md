@@ -63,16 +63,18 @@ Samma grupp hela kortet. Referens är **skrov/stomme**, inte PE-skena.
 
 ## Räkna
 
-Samma grupp **230 V**. Två avläsningar från kortet.
+Mei. Samma avläsningar som kortet. I_läck = U / R. På papper.
 
-Läckström = spänning genom isolation.  I_läck = U / R.
+230 V / 2,4 MΩ  →  I_läck ≈ ______ µA
 
-2,4 MΩ → I_läck ≈ ______ µA
-0,4 MΩ → I_läck ≈ ______ µA
+230 V / 0,4 MΩ  →  I_läck ≈ ______ µA
 
-1 MΩ är upplysning, inte skall.
+1 MΩ är  [ ] skall    [ ] upplysning
 
-Elektriker: 1 MΩ är inte lag. / Ingenjör: 0,4 MΩ = STOP, inte “nästan GO”.
+Beslut GO/STOP tar du från meggerkortet, inte från µA.
+
+Elektriker: µA är inte JFB-hemma.
+Ingenjör: 1 MΩ är upplysning. Kortet styr.
 
 ---
 

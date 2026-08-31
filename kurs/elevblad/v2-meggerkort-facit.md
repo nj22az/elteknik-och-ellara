@@ -6,6 +6,7 @@
 G: kedja i ordning, referens skrov, 2,4 = GO efter kåpa, 0,4 = STOP + avvikelse, 1 MΩ = upplysning.
 VG: saknas megger på varvet → tvåpol + gapflagga.
 IG: megger på spänning, PE som referens, 1 MΩ som lag, hoppar lås, 0,4 tillslag.
+Räkna: 96 µA / 575 µA; 1 MΩ = upplysning.
 
 ---
 
@@ -68,14 +69,18 @@ Kedja **i ordning**. Referens **skrov/stomme**, inte PE.
 
 ## Räkna
 
-I_läck = U / R. 230 V. Svara i µA.
+I_läck = U / R.
 
-2,4 MΩ → 230 / 2,4×10⁶ ≈ **96 µA**
-0,4 MΩ → 230 / 0,4×10⁶ ≈ **575 µA**
+230 V / 2,4 MΩ ≈ **96 µA**.
 
-1 MΩ är upplysning, inte skall.
+230 V / 0,4 MΩ ≈ **575 µA**.
 
-Elektriker: 1 MΩ är inte lag. / Ingenjör: 0,4 MΩ = STOP, inte “nästan GO”.
+1 MΩ = **upplysning**, inte skall.
+
+Beslut är fortfarande GO/STOP från meggerkortet. µA ändrar inte det.
+
+Elektriker: µA är inte JFB-hemma.
+Ingenjör: 1 MΩ är upplysning. Kortet styr.
 
 ---
 

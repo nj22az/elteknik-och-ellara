@@ -7,16 +7,18 @@ Jobb: död = 3 tvåpol; ELV = 2 DMM; isolation = 1 megger.
 Tång som volt STOP. Megger live STOP.
 VG: motiverar look-not-touch / tvåpol mot skrov.
 IG: övning = 1; GO på tång eller live megger.
+I = 4,8 A, grupp 10 A GO, tång-volt STOP.
 
 ## Räkna
 
-Värmare 230 V, 48 Ω. I = U / R.
+I = 230 / 48 = **4,8 A**.
 
-I = 230 / 48 = **4,8 A**. Grupp 10 A = **GO** på papper.
+Grupp 10 A: **GO** på papper (4,8 A < 10 A).
 
-Tång som volt = STOP.
+Tång som volt: **STOP**.
 
-Elektriker: det här är inte din landcentral. / Ingenjör: tång som volt är STOP.
+Elektriker: det här är inte din landcentral.
+Ingenjör: tång mäter ström, inte volt.
 
 Quiet-machine: tyst tavla ≠ död.
 Inte nöd/EX/80005.

@@ -32,10 +32,6 @@ Serie:  I = ______ A     U över en 12 Ω = ______ V
 
 Parallell:  U över var och en = ______ V     I i en gren = ______ A
 
-Effekt i en 12 Ω i serie. Effekt = spänning gånger ström.  P = U · I.
-
-P = ______ W
-
 Elektriker: minus är inte PE. / Ingenjör: räkna I innan du klämmer på.
 
 ---
@@ -66,6 +62,17 @@ Ahmed sätter DMM på **A (ström)** och mäter **över** 24 V-polerna.
 En mening varför:
 
 _______________________________________________________________
+
+---
+
+## Räkna
+
+En **12 Ω** i serie. U = **12 V**, I = **1 A**. På papper.
+
+P = U · I = ______ W
+
+Elektriker: 12 W är värme i skåpet.
+Ingenjör: räkna P innan du klämmer på.
 
 ---
 

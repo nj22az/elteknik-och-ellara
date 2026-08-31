@@ -60,15 +60,16 @@ Megger på spänningssatt:  [ ] STOP   [ ] GO
 
 ## Räkna
 
-Värmare **230 V**, **48 Ω**.
+Sara. Värmare **230 V**, **48 Ω**. Grupp **10 A**. På papper. Inte live MSB.
 
-Ström = spänning genom motstånd.  I = U / R.
+I = U / R = ______ A
 
-I = ______ A
+Grupp 10 A:  [ ] GO    [ ] STOP
 
-Grupp **10 A**. På papper:  [ ] STOP  [ ] GO
+Tång som volt:  [ ] GO    [ ] STOP
 
-Elektriker: det här är inte din landcentral. / Ingenjör: tång som volt är STOP.
+Elektriker: det här är inte din landcentral.
+Ingenjör: tång mäter ström, inte volt.
 
 ---
 

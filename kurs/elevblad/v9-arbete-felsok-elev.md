@@ -82,14 +82,12 @@ Lina: “den gick i går, axeln är stilla, jag mäter live.” STOP eller GO?
 
 ## Räkna
 
-Förväntat **24 V** vid spole **120 Ω**. Papperfoto: **0 V**.
+Lina. Foto på papper: spolens U = **0 V**. Väntat **24 V**. Väntat I = **0,20 A**, mätt **0**.
 
-Ström = spänning genom motstånd.  I = U / R.
+Öppna i  [ ] styr    [ ] PE-jakt    [ ] live 440
 
-Förväntad I = ______ A
-Foto 0 V →  [ ] öppen i styr   [ ] PE-jakt   [ ] live 440
-
-Elektriker: inte PE-jakt. / Ingenjör: öppen styr, inte 440-lucka.
+Elektriker: inte PE-jakt. Inte live 440.
+Ingenjör: 0 V vid spolen är styr, inte lastjakt.
 
 ---
 

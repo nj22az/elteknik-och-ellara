@@ -59,15 +59,14 @@ Patrik går till MSB med DMM “för att hitta motorn”.
 
 ## Räkna
 
-P = **15 kW**. U = **400 V**. cosφ = **0,85**.
+Jonas. Skylt **15 kW**, **400 V**, cosφ **0,85**. Lucka stängd. Inte öppna plint.
 
-Ström ≈ effekt / (√3 · spänning · cosφ).  I ≈ P / (√3 · U · cosφ)
+I ≈ P / (√3 · U · cosφ) = ______ A
 
-I ≈ ______ A
+Skylt **28 A** är  [ ] rimlig    [ ] fel
 
-Skylt 28 A är  [ ] rimlig  [ ] orimlig
-
-Elektriker: 440-plint är inte PE-dosa. / Ingenjör: stilla rotor är inte död plint.
+Elektriker: 440-plint är inte PE-dosa.
+Ingenjör: räkna I mot skylt. Öppna inte.
 
 ---
 
