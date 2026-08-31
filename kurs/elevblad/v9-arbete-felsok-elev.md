@@ -21,7 +21,9 @@ Inte skriftligt prov på detta blad.
 ```
 ████ FARA ██████████████████████████████████████████
 │  Inte 440-lucka för att “göra jobbet”.           │
-│  Inte TS-blankett. Tyst maskin är inte död.      │
+│  Inte TS-blankett.                               │
+│  Bara för att maskinen inte låter                │
+│  betyder det inte att den är avställd.           │
 └──────────────────────────────────────────────────┘
 ```
 
