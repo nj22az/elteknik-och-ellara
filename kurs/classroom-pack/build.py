@@ -443,6 +443,21 @@ pre {{
   padding: 6px 8px;
   border: 1px solid #{INK};
 }}
+.rakna {{
+  border: 1px solid #{INK};
+  padding: 8px 10px 6px 10px;
+  margin: 8px 0 12px 0;
+  page-break-inside: avoid;
+}}
+.rakna h2 {{
+  font-size: 13pt;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+  letter-spacing: 0.01em;
+}}
+.rakna p {{
+  margin: 0 0 4px 0;
+}}
 a {{ color: #{INK}; text-decoration: none; }}
 """
 
@@ -509,6 +524,12 @@ def callout(kind: str, title: str, body: str) -> str:
 </div>"""
 
 
+def rakna_html(paragraphs: list[str]) -> str:
+    """Paper räkneruta. Text from source markdown, never invented."""
+    ps = "".join(f"<p>{inline_html(p)}</p>" for p in paragraphs)
+    return f'<div class="rakna"><h2>Räkna</h2>{ps}</div>'
+
+
 # ---------------------------------------------------------------------------
 # Documents
 # ---------------------------------------------------------------------------
@@ -565,6 +586,14 @@ def doc_elev_stotvag() -> tuple[str, str, bool]:
   <div class="card">PE</div>
   <div class="card">utanför IR</div>
 </div>"""
+    body += rakna_html(
+        [
+            "Fatima. Våt väg **1 kΩ**. Skåp **230 V**. På papper. Inte kroppstabell.",
+            "I = U / R = ______ A",
+            "Elektriker: det är därför STOP innan du tar i.",
+            "Ingenjör: räkna I innan handen når höljet.",
+        ]
+    )
     body += "<h2>4. Två spår — en rad</h2>"
     body += "<p>Elektriker: leta inte JFB.</p>"
     body += "<p>Ingenjör: läcker det vid spänningssatt don är det elarbete.</p>"
@@ -614,6 +643,14 @@ def doc_facit_stotvag() -> tuple[str, str, bool]:
   <div class="card">utanför IR</div>
 </div>"""
     body += "<p>Tredje (utanför IR) räknas också. IG: inget ringat, eller JFB som “fel”.</p>"
+    body += rakna_html(
+        [
+            "I = U / R = 230 / 1000 = **0,23 A**.",
+            "Därför STOP innan du tar i. Inte kroppsmotståndstabell. Inte gore.",
+            "Elektriker: det är därför STOP innan du tar i.",
+            "Ingenjör: räkna I innan handen når höljet.",
+        ]
+    )
     body += "<h2>4. Två spår — en rad</h2>"
     body += "<p>Elektriker = leta inte JFB.</p>"
     body += "<p>Ingenjör = läcker det vid spänningssatt don är det elarbete.</p>"
@@ -708,6 +745,17 @@ def doc_elev_megger() -> tuple[str, str, bool]:
     body += callout("fara", "FARA", "Ingen megger på spänningssatt grupp.")
     body += '<h2 class="first">Meggerkort (blankt)</h2>'
     body += megger_form(False)
+    body += rakna_html(
+        [
+            "Mei. Samma avläsningar som kortet. I_läck = U / R. På papper.",
+            "230 V / 2,4 MΩ  →  I_läck ≈ ______ µA",
+            "230 V / 0,4 MΩ  →  I_läck ≈ ______ µA",
+            "1 MΩ är  [ ] skall    [ ] upplysning",
+            "Beslut GO/STOP tar du från meggerkortet, inte från µA.",
+            "Elektriker: µA är inte JFB-hemma.",
+            "Ingenjör: 1 MΩ är upplysning. Kortet styr.",
+        ]
+    )
     body += "<h2>Två spår — en rad</h2>"
     body += "<p>Elektriker: referens är inte PE-skenan hemma.</p>"
     body += "<p>Ingenjör: bara för att maskinen inte låter betyder det inte att den är avställd.</p>"
@@ -739,6 +787,17 @@ def doc_facit_megger() -> tuple[str, str, bool]:
     body += "<p><strong>2,4 MΩ</strong> = GO att <em>planera</em> tillslag <strong>efter kåpa på</strong>. Inte tillslag med öppen kåpa.</p>"
     body += "<p><strong>0,4 MΩ</strong> = STOP. Ingen tillslag. Skriv avvikelse.</p>"
     body += "<p><strong>1 MΩ</strong> = upplysning, inte lag. Inte “olagligt enligt 5 §”.</p>"
+    body += rakna_html(
+        [
+            "I_läck = U / R.",
+            "230 V / 2,4 MΩ ≈ **96 µA**.",
+            "230 V / 0,4 MΩ ≈ **575 µA**.",
+            "1 MΩ = **upplysning**, inte skall.",
+            "Beslut är fortfarande GO/STOP från meggerkortet. µA ändrar inte det.",
+            "Elektriker: µA är inte JFB-hemma.",
+            "Ingenjör: 1 MΩ är upplysning. Kortet styr.",
+        ]
+    )
     body += "<h2>Två spår — en rad</h2>"
     body += "<p>Elektriker = referens är inte PE-skenan hemma.</p>"
     body += "<p>Ingenjör = bara för att maskinen inte låter betyder det inte att den är avställd.</p>"
@@ -1377,6 +1436,11 @@ def write_elev_stotvag_docx(dest: Path):
     add_h(doc, "3. Ring två fel", 13, border_top=True)
     add_p(doc, "Tre lappar. Ring **två** fel.")
     add_three_cards(doc, ["packning", "PE", "utanför IR"], [False, False, False])
+    add_h(doc, "Räkna", 13, border_top=True)
+    add_p(doc, "Fatima. Våt väg **1 kΩ**. Skåp **230 V**. På papper. Inte kroppstabell.")
+    add_p(doc, "I = U / R = ______ A")
+    add_p(doc, "Elektriker: det är därför STOP innan du tar i.")
+    add_p(doc, "Ingenjör: räkna I innan handen når höljet.")
     add_h(doc, "4. Två spår — en rad", 13, border_top=True)
     add_p(doc, "Elektriker: leta inte JFB.")
     add_p(doc, "Ingenjör: läcker det vid spänningssatt don är det elarbete.")
@@ -1406,6 +1470,11 @@ def write_facit_stotvag_docx(dest: Path):
     add_p(doc, "**G = två av tre.** Alla tre duger. Visa minst dessa två:")
     add_three_cards(doc, ["packning", "PE", "utanför IR"], [True, True, False])
     add_p(doc, "Tredje (utanför IR) räknas också. IG: inget ringat, eller JFB som “fel”.")
+    add_h(doc, "Räkna", 13, border_top=True)
+    add_p(doc, "I = U / R = 230 / 1000 = **0,23 A**.")
+    add_p(doc, "Därför STOP innan du tar i. Inte kroppsmotståndstabell. Inte gore.")
+    add_p(doc, "Elektriker: det är därför STOP innan du tar i.")
+    add_p(doc, "Ingenjör: räkna I innan handen når höljet.")
     add_h(doc, "4. Två spår — en rad", 13, border_top=True)
     add_p(doc, "Elektriker = leta inte JFB.")
     add_p(doc, "Ingenjör = läcker det vid spänningssatt don är det elarbete.")
@@ -1428,6 +1497,14 @@ def write_elev_megger_docx(dest: Path):
     add_callout_table(doc, "FARA", "Ingen megger på spänningssatt grupp.", fara=True)
     add_h(doc, "Meggerkort (blankt)", 13, border_top=True)
     add_megger_table(doc, filled=False)
+    add_h(doc, "Räkna", 13, border_top=True)
+    add_p(doc, "Mei. Samma avläsningar som kortet. I_läck = U / R. På papper.")
+    add_p(doc, "230 V / 2,4 MΩ  →  I_läck ≈ ______ µA")
+    add_p(doc, "230 V / 0,4 MΩ  →  I_läck ≈ ______ µA")
+    add_p(doc, "1 MΩ är  [ ] skall    [ ] upplysning")
+    add_p(doc, "Beslut GO/STOP tar du från meggerkortet, inte från µA.")
+    add_p(doc, "Elektriker: µA är inte JFB-hemma.")
+    add_p(doc, "Ingenjör: 1 MΩ är upplysning. Kortet styr.")
     add_h(doc, "Två spår — en rad", 13, border_top=True)
     add_p(doc, "Elektriker: referens är inte PE-skenan hemma.")
     add_p(doc, "Ingenjör: bara för att maskinen inte låter betyder det inte att den är avställd.")
@@ -1461,6 +1538,14 @@ def write_facit_megger_docx(dest: Path):
     add_p(doc, "**2,4 MΩ** = GO att *planera* tillslag **efter kåpa på**. Inte tillslag med öppen kåpa.")
     add_p(doc, "**0,4 MΩ** = STOP. Ingen tillslag. Skriv avvikelse.")
     add_p(doc, "**1 MΩ** = upplysning, inte lag. Inte “olagligt enligt 5 §”.")
+    add_h(doc, "Räkna", 13, border_top=True)
+    add_p(doc, "I_läck = U / R.")
+    add_p(doc, "230 V / 2,4 MΩ ≈ **96 µA**.")
+    add_p(doc, "230 V / 0,4 MΩ ≈ **575 µA**.")
+    add_p(doc, "1 MΩ = **upplysning**, inte skall.")
+    add_p(doc, "Beslut är fortfarande GO/STOP från meggerkortet. µA ändrar inte det.")
+    add_p(doc, "Elektriker: µA är inte JFB-hemma.")
+    add_p(doc, "Ingenjör: 1 MΩ är upplysning. Kortet styr.")
     add_h(doc, "Två spår — en rad", 13, border_top=True)
     add_p(doc, "Elektriker = referens är inte PE-skenan hemma.")
     add_p(doc, "Ingenjör = bara för att maskinen inte låter betyder det inte att den är avställd.")
