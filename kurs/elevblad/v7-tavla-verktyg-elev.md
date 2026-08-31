@@ -58,6 +58,20 @@ Megger på spänningssatt:  [ ] STOP   [ ] GO
 
 ---
 
+## Räkna
+
+Värmare **230 V**, **48 Ω**.
+
+Ström = spänning genom motstånd.  I = U / R.
+
+I = ______ A
+
+Grupp **10 A**. På papper:  [ ] STOP  [ ] GO
+
+Elektriker: det här är inte din landcentral. / Ingenjör: tång som volt är STOP.
+
+---
+
 ## 3. Två spår — en rad
 
 Elektriker: det här är inte din landcentral.

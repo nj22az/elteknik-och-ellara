@@ -71,6 +71,18 @@ Tredje (utanför IR) räknas också. IG: inget ringat, eller JFB som “fel”.
 
 ---
 
+## Räkna
+
+Våt väg 1 kΩ. U = 230 V. I = U / R.
+
+I = 230 / 1000 = **0,23 A**.
+
+Därför STOP innan du tar i.
+
+Elektriker: räkna I, sen handen. / Ingenjör: våt 230 är inte “känn efter”.
+
+---
+
 ## 4. Två spår — en rad
 
 Elektriker = leta inte JFB.

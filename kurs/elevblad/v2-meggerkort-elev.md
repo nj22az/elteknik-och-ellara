@@ -61,6 +61,21 @@ Samma grupp hela kortet. Referens är **skrov/stomme**, inte PE-skena.
 
 ---
 
+## Räkna
+
+Samma grupp **230 V**. Två avläsningar från kortet.
+
+Läckström = spänning genom isolation.  I_läck = U / R.
+
+2,4 MΩ → I_läck ≈ ______ µA
+0,4 MΩ → I_läck ≈ ______ µA
+
+1 MΩ är upplysning, inte skall.
+
+Elektriker: 1 MΩ är inte lag. / Ingenjör: 0,4 MΩ = STOP, inte “nästan GO”.
+
+---
+
 ## Två spår — en rad
 
 Elektriker: referens är inte PE-skenan hemma.

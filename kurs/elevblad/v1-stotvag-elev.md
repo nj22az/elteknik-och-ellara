@@ -83,6 +83,20 @@ Tre lappar. Ring **två** fel.
 
 ---
 
+## Räkna
+
+Våt väg **1 kΩ**. U = **230 V**.
+
+Ström = spänning genom motstånd.  I = U / R.
+
+I = ______ A
+
+Därför STOP innan du tar i.
+
+Elektriker: räkna I, sen handen. / Ingenjör: våt 230 är inte “känn efter”.
+
+---
+
 ## 4. Två spår — en rad
 
 Elektriker: leta inte JFB.

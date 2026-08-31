@@ -57,6 +57,19 @@ Eva tar DMM mot 440-luckan “bara en fas mot skrov”.
 
 ---
 
+## Räkna
+
+Linje = √3 · fas.  U_linje = √3 · U_fas.
+
+400 V linje → U_fas ≈ ______ V
+440 V linje → U_fas ≈ ______ V
+
+440 = titta, inte röra.
+
+Elektriker: skrov är inte N. / Ingenjör: 440 är tre spänningar, inte ett rum.
+
+---
+
 ## 3. Två spår — en rad
 
 Elektriker: skrov är inte N/PE hemma.

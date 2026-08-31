@@ -66,6 +66,19 @@ Kedja **i ordning**. Referens **skrov/stomme**, inte PE.
 
 ---
 
+## Räkna
+
+I_läck = U / R. 230 V. Svara i µA.
+
+2,4 MΩ → 230 / 2,4×10⁶ ≈ **96 µA**
+0,4 MΩ → 230 / 0,4×10⁶ ≈ **575 µA**
+
+1 MΩ är upplysning, inte skall.
+
+Elektriker: 1 MΩ är inte lag. / Ingenjör: 0,4 MΩ = STOP, inte “nästan GO”.
+
+---
+
 ## Två spår — en rad
 
 Elektriker = referens är inte PE-skenan hemma.

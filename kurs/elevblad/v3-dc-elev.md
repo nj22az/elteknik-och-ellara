@@ -32,6 +32,12 @@ Serie:  I = ______ A     U över en 12 Ω = ______ V
 
 Parallell:  U över var och en = ______ V     I i en gren = ______ A
 
+Effekt i en 12 Ω i serie. Effekt = spänning gånger ström.  P = U · I.
+
+P = ______ W
+
+Elektriker: minus är inte PE. / Ingenjör: räkna I innan du klämmer på.
+
 ---
 
 ## 2. DMM — vilket läge?

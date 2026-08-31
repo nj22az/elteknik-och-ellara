@@ -28,11 +28,15 @@ Last **230 Ω**. Märkning **230 V**.
 
 ## 1. Räkna
 
+Ström = spänning genom motstånd.  I = U / R.  Topp ≈ rms × √2.
+
 230 V är  [ ] rms   [ ] topp
 
 I (rms) = ______ A
 
 Topp på sinus ≈ ______ V   (rms × √2)
+
+Elektriker: 230 ombord är inte lägenhetens TN. / Ingenjör: rms innan handen.
 
 ---
 

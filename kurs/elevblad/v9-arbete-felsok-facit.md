@@ -8,4 +8,12 @@
 VG: motiverar isolation först och 24 V-styr före 440-last.
 IG: GO kåpa; TS-blankett ja; GO PE; GO live; hoppar isolation.
 
+## Räkna
+
+Förväntat 24 V, 120 Ω. I = U / R.
+
+Förväntad I = 24 / 120 = **0,20 A**. Mätt 0 V → **öppen i styr**. Inte PE-jakt. Inte live 440.
+
+Elektriker: inte PE-jakt. / Ingenjör: öppen styr, inte 440-lucka.
+
 Inte skriftligt prov här. Inte EX/BESS/nöd/80005. Inte lås 230.

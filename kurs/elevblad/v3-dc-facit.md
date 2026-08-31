@@ -8,8 +8,14 @@ IG: GO på B som volt; polaritet egal; “skrov är nolla”.
 
 ---
 
+## Räkna
+
 Serie: I = **1 A**, U = **12 V**.
 Parallell: U = **24 V**, I gren = **2 A**.
+P = U · I. En 12 Ω i serie: 12 V × 1 A = **12 W**.
+
+Elektriker: minus är inte PE. / Ingenjör: räkna I innan du klämmer på.
+
 DMM spänning: **A**. Polaritet: **plus**.
 STOP. Ampere över batteri är kort.
 
