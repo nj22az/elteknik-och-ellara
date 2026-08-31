@@ -153,10 +153,10 @@ h1 {{
   margin: 0 0 8px 0;
 }}
 h2 {{
-  font-size: 12.5pt;
+  font-size: 12pt;
   font-weight: 600;
-  margin: 13px 0 6px 0;
-  padding-top: 4px;
+  margin: 9px 0 4px 0;
+  padding-top: 3px;
   border-top: 1px solid #{INK};
   page-break-after: avoid;
 }}
@@ -240,7 +240,7 @@ li {{ margin: 0 0 3px 0; }}
 .choice {{
   border: 2px solid #{INK};
   text-align: center;
-  padding: 12px 8px;
+  padding: 8px 8px;
   page-break-inside: avoid;
 }}
 .choice .lab {{
@@ -267,8 +267,8 @@ li {{ margin: 0 0 3px 0; }}
 }}
 .diag {{
   border: 1px solid #{INK};
-  padding: 12px 10px 10px 10px;
-  margin: 0 0 8px 0;
+  padding: 8px 10px 8px 10px;
+  margin: 0 0 6px 0;
   page-break-inside: avoid;
   text-align: center;
 }}
@@ -384,7 +384,7 @@ table.form th.form-head {{
 }}
 table.form td {{
   border-top: 1px solid #{INK};
-  padding: 6px 8px;
+  padding: 4px 8px;
   vertical-align: top;
 }}
 table.form td.lab {{
@@ -839,6 +839,8 @@ def parse_md(md: str) -> list[dict]:
             if nxt.startswith("#") or nxt.startswith("|") or nxt.startswith("```") or nxt.strip() in ("---", "***"):
                 break
             if re.match(r"^[-*] ", nxt) or re.match(r"^\d+\.\s", nxt):
+                break
+            if nxt.startswith("**"):
                 break
             para.append(nxt)
             i += 1

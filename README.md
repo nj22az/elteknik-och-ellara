@@ -29,6 +29,7 @@ Twelve modules = twelve book chapters. Nine calendar weeks. One physical lab day
 ```
 bok/                 12 chapters, figures, kapitellista
 kurs/kurskarta/      12-module spine
+kurs/classroom-pack/  Google Classroom PDF + Word (vecka 1–2)
 kurs/lektioner/      student lesson sheets
 kurs/lararhandledning/  classroom posts, slides, quizzes
 kurs/prov/           student sheet + teacher facit
