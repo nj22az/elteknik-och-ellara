@@ -184,7 +184,7 @@
       ],
       pptx: "pptx/vecka-01.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v1-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v1-vecka1.md"]
+      inlagg: "kurs/lararhandledning/classroom-v1-vecka1.md"
     },
     "2": {
       elevFiles: [
@@ -210,7 +210,7 @@
       ],
       pptx: "pptx/vecka-02.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v2-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v2-vecka2.md"]
+      inlagg: "kurs/lararhandledning/classroom-v2-vecka2.md"
     },
     "3": {
       elevFiles: [
@@ -236,7 +236,7 @@
       ],
       pptx: "pptx/vecka-03.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v3-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v3-vecka3.md"]
+      inlagg: "kurs/lararhandledning/classroom-v3-vecka3.md"
     },
     "4": {
       elevFiles: [
@@ -262,7 +262,7 @@
       ],
       pptx: "pptx/vecka-04.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v4-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v4-vecka4.md"]
+      inlagg: "kurs/lararhandledning/classroom-v4-vecka4.md"
     },
     "5": {
       elevFiles: [
@@ -288,7 +288,7 @@
       ],
       pptx: "pptx/vecka-05.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v5-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v5-vecka5.md"]
+      inlagg: "kurs/lararhandledning/classroom-v5-vecka5.md"
     },
     "6": {
       elevFiles: [
@@ -314,7 +314,7 @@
       ],
       pptx: "pptx/vecka-06.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v6-quiz.md"],
-      inlagg: ["kurs/lararhandledning/classroom-v6-vecka6.md"]
+      inlagg: "kurs/lararhandledning/classroom-v6-vecka6.md"
     },
     "7": {
       elevFiles: [
@@ -499,7 +499,7 @@
         larareFiles: known.larareFiles,
         pptx: known.pptx,
         quizzes: known.quizzes.slice(),
-        inlagg: Array.isArray(known.inlagg) ? known.inlagg.slice() : (known.inlagg ? [known.inlagg] : [])
+        inlagg: Array.isArray(known.inlagg) ? known.inlagg.slice() : known.inlagg
       };
     }
     return {
@@ -554,6 +554,15 @@
     });
     html += "</ul>";
     return html;
+  }
+  function inlaggList(pack) {
+    var v = pack && pack.inlagg;
+    if (!v) return [];
+    if (Array.isArray(v)) return v.slice();
+    return [v];
+  }
+  function fetchText(path) {
+    return fetch(path).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; });
   }
   function teacherWeekPackHtml(cal) {
     var pack = weekPack(cal);
@@ -1018,7 +1027,7 @@
     head += "<h2>Elteknik och ellära</h2>";
     head += "<p class=\"lead\">Inlägg, material, uppgift och quiz. Inte en filträd.</p>";
     head += weekGridHtml();
-    head += "<p class=\"kicker\" style=\"margin-top:2rem\">Senaste · V" + latest + "</p>";
+    head += "<p class=\"kicker\">Senaste · V" + latest + "</p>";
     head += weekHeroHtml(latest);
     head += "<p class=\"lead\">" + esc(weekNames(latest)) + "</p>";
     showStudentStream(latest, { head: head, noTurn: true });
@@ -1104,19 +1113,14 @@
     html += "<div id=\"stream-root\"></div>";
     if (!opts.noTurn) html += calTurn(cal);
     setMain(html, true);
-    var inlaggPaths = pack.inlagg || [];
-    var inlaggPs = inlaggPaths.map(function (path) {
-      return fetch(path).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; });
-    });
-    var quizPaths = pack.quizzes || [];
-    var quizPs = quizPaths.map(function (path) {
-      return fetch(path).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; });
-    });
-    Promise.all(inlaggPs.concat(quizPs)).then(function (parts) {
+    var posts = inlaggList(pack);
+    var quizPaths = (pack.quizzes || []).slice();
+    var waits = posts.map(fetchText).concat(quizPaths.map(fetchText));
+    Promise.all(waits).then(function (parts) {
       var root = byId("stream-root");
       if (!root) return;
       var out = "";
-      var inlaggN = inlaggPaths.length;
+      var inlaggN = posts.length;
       var i, inlaggMd, qPath, quizMd, quiz, bound = false;
       if (!inlaggN) {
         out += "<article class=\"stream-post\" data-type=\"inlagg\"><p>Inget inlägg.</p></article>";
@@ -1124,11 +1128,11 @@
       for (i = 0; i < inlaggN; i++) {
         inlaggMd = studentPostText(parts[i] || "");
         out += "<article class=\"stream-post\" data-type=\"inlagg\">";
-        out += inlaggMd ? mdHtml(inlaggMd, inlaggPaths[i]) : "<p>Inget inlägg.</p>";
+        out += inlaggMd ? mdHtml(inlaggMd, posts[i]) : "<p>Inget inlägg.</p>";
         out += "</article>";
       }
       out += "<article class=\"stream-post\" data-type=\"material\">";
-      out += studentFileListHtml(pack.materialFiles && pack.materialFiles.length ? pack.materialFiles : pack.elevFiles);
+      out += studentFileListHtml(pack.materialFiles);
       out += "</article>";
       out += "<article class=\"stream-post\" data-type=\"uppgift\">";
       out += studentFileListHtml(pack.uppgiftFiles);
@@ -1143,6 +1147,7 @@
         quiz = parseQuiz(quizMd);
         out += "<article class=\"stream-post\" data-type=\"quiz\">";
         if (quiz) { out += renderQuiz(quiz, qPath); bound = true; }
+        else if (quizMd) out += mdHtml(stripFacit(quizMd), qPath);
         else if (qPath) out += "<p><a href=\"#/" + qPath + "\">Öppna quiz</a></p>";
         else out += "<p>Material kommer</p>";
         out += "</article>";
@@ -1375,8 +1380,12 @@
     return html;
   }
   function bindQuiz() {
-    var root = byId("quiz-root");
-    if (!root) return;
+    var roots = document.querySelectorAll(".quiz");
+    for (var ri = 0; ri < roots.length; ri++) bindQuizRoot(roots[ri]);
+  }
+  function bindQuizRoot(root) {
+    if (!root || root.getAttribute("data-bound")) return;
+    root.setAttribute("data-bound", "1");
     var qs = root.querySelectorAll(".q");
     var answered = 0, correct = 0, total = qs.length;
     var score = root.querySelector(".quiz-score");
