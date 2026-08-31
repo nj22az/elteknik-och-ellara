@@ -184,7 +184,7 @@
       ],
       pptx: "pptx/vecka-01.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v1-quiz.md"],
-      inlagg: "kurs/lararhandledning/classroom-v1-vecka1.md"
+      inlagg: ["kurs/lararhandledning/classroom-v1-vecka1.md"]
     },
     "2": {
       elevFiles: [
@@ -210,9 +210,218 @@
       ],
       pptx: "pptx/vecka-02.pptx",
       quizzes: ["kurs/lararhandledning/classroom-v2-quiz.md"],
-      inlagg: "kurs/lararhandledning/classroom-v2-vecka2.md"
+      inlagg: ["kurs/lararhandledning/classroom-v2-vecka2.md"]
+    },
+    "3": {
+      elevFiles: [
+        { label: "Elevblad DC (PDF)", href: "kurs/classroom-pack/vecka-03/elev-dc.pdf" },
+        { label: "Elevblad DC (Word)", href: "kurs/classroom-pack/vecka-03/elev-dc.docx" },
+        { label: "Lektion 3.1 DC (PDF)", href: "kurs/classroom-pack/vecka-03/lektion-3.1-dc.pdf" },
+        { label: "Lektion 3.1 DC (Word)", href: "kurs/classroom-pack/vecka-03/lektion-3.1-dc.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad DC (PDF)", href: "kurs/classroom-pack/vecka-03/elev-dc.pdf" },
+        { label: "Elevblad DC (Word)", href: "kurs/classroom-pack/vecka-03/elev-dc.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 3.1 DC (PDF)", href: "kurs/classroom-pack/vecka-03/lektion-3.1-dc.pdf" },
+        { label: "Lektion 3.1 DC (Word)", href: "kurs/classroom-pack/vecka-03/lektion-3.1-dc.docx" }
+      ],
+      elevMd: "kurs/elevblad/v3-dc-elev.md",
+      larareFiles: [
+        { label: "Facit DC (PDF)", href: "kurs/classroom-pack/vecka-03/larare-dc-facit.pdf" },
+        { label: "Facit DC (Word)", href: "kurs/classroom-pack/vecka-03/larare-dc-facit.docx" },
+        { label: "Inlägg vecka 3 (PDF)", href: "kurs/classroom-pack/vecka-03/larare-inlagg-vecka3.pdf" },
+        { label: "Inlägg vecka 3 (Word)", href: "kurs/classroom-pack/vecka-03/larare-inlagg-vecka3.docx" }
+      ],
+      pptx: "pptx/vecka-03.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v3-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v3-vecka3.md"]
+    },
+    "4": {
+      elevFiles: [
+        { label: "Elevblad enfas (PDF)", href: "kurs/classroom-pack/vecka-04/elev-enfas.pdf" },
+        { label: "Elevblad enfas (Word)", href: "kurs/classroom-pack/vecka-04/elev-enfas.docx" },
+        { label: "Lektion 4.1 Enfas AC (PDF)", href: "kurs/classroom-pack/vecka-04/lektion-4.1-enfas-ac.pdf" },
+        { label: "Lektion 4.1 Enfas AC (Word)", href: "kurs/classroom-pack/vecka-04/lektion-4.1-enfas-ac.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad enfas (PDF)", href: "kurs/classroom-pack/vecka-04/elev-enfas.pdf" },
+        { label: "Elevblad enfas (Word)", href: "kurs/classroom-pack/vecka-04/elev-enfas.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 4.1 Enfas AC (PDF)", href: "kurs/classroom-pack/vecka-04/lektion-4.1-enfas-ac.pdf" },
+        { label: "Lektion 4.1 Enfas AC (Word)", href: "kurs/classroom-pack/vecka-04/lektion-4.1-enfas-ac.docx" }
+      ],
+      elevMd: "kurs/elevblad/v4-enfas-elev.md",
+      larareFiles: [
+        { label: "Facit enfas (PDF)", href: "kurs/classroom-pack/vecka-04/larare-enfas-facit.pdf" },
+        { label: "Facit enfas (Word)", href: "kurs/classroom-pack/vecka-04/larare-enfas-facit.docx" },
+        { label: "Inlägg vecka 4 (PDF)", href: "kurs/classroom-pack/vecka-04/larare-inlagg-vecka4.pdf" },
+        { label: "Inlägg vecka 4 (Word)", href: "kurs/classroom-pack/vecka-04/larare-inlagg-vecka4.docx" }
+      ],
+      pptx: "pptx/vecka-04.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v4-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v4-vecka4.md"]
+    },
+    "5": {
+      elevFiles: [
+        { label: "Elevblad trefas (PDF)", href: "kurs/classroom-pack/vecka-05/elev-trefas.pdf" },
+        { label: "Elevblad trefas (Word)", href: "kurs/classroom-pack/vecka-05/elev-trefas.docx" },
+        { label: "Lektion 5.1 Trefas (PDF)", href: "kurs/classroom-pack/vecka-05/lektion-5.1-trefas.pdf" },
+        { label: "Lektion 5.1 Trefas (Word)", href: "kurs/classroom-pack/vecka-05/lektion-5.1-trefas.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad trefas (PDF)", href: "kurs/classroom-pack/vecka-05/elev-trefas.pdf" },
+        { label: "Elevblad trefas (Word)", href: "kurs/classroom-pack/vecka-05/elev-trefas.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 5.1 Trefas (PDF)", href: "kurs/classroom-pack/vecka-05/lektion-5.1-trefas.pdf" },
+        { label: "Lektion 5.1 Trefas (Word)", href: "kurs/classroom-pack/vecka-05/lektion-5.1-trefas.docx" }
+      ],
+      elevMd: "kurs/elevblad/v5-trefas-elev.md",
+      larareFiles: [
+        { label: "Facit trefas (PDF)", href: "kurs/classroom-pack/vecka-05/larare-trefas-facit.pdf" },
+        { label: "Facit trefas (Word)", href: "kurs/classroom-pack/vecka-05/larare-trefas-facit.docx" },
+        { label: "Inlägg vecka 5 (PDF)", href: "kurs/classroom-pack/vecka-05/larare-inlagg-vecka5.pdf" },
+        { label: "Inlägg vecka 5 (Word)", href: "kurs/classroom-pack/vecka-05/larare-inlagg-vecka5.docx" }
+      ],
+      pptx: "pptx/vecka-05.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v5-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v5-vecka5.md"]
+    },
+    "6": {
+      elevFiles: [
+        { label: "Elevblad maskiner (PDF)", href: "kurs/classroom-pack/vecka-06/elev-maskiner.pdf" },
+        { label: "Elevblad maskiner (Word)", href: "kurs/classroom-pack/vecka-06/elev-maskiner.docx" },
+        { label: "Lektion 6.1 Maskiner (PDF)", href: "kurs/classroom-pack/vecka-06/lektion-6.1-maskiner.pdf" },
+        { label: "Lektion 6.1 Maskiner (Word)", href: "kurs/classroom-pack/vecka-06/lektion-6.1-maskiner.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad maskiner (PDF)", href: "kurs/classroom-pack/vecka-06/elev-maskiner.pdf" },
+        { label: "Elevblad maskiner (Word)", href: "kurs/classroom-pack/vecka-06/elev-maskiner.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 6.1 Maskiner (PDF)", href: "kurs/classroom-pack/vecka-06/lektion-6.1-maskiner.pdf" },
+        { label: "Lektion 6.1 Maskiner (Word)", href: "kurs/classroom-pack/vecka-06/lektion-6.1-maskiner.docx" }
+      ],
+      elevMd: "kurs/elevblad/v6-maskiner-elev.md",
+      larareFiles: [
+        { label: "Facit maskiner (PDF)", href: "kurs/classroom-pack/vecka-06/larare-maskiner-facit.pdf" },
+        { label: "Facit maskiner (Word)", href: "kurs/classroom-pack/vecka-06/larare-maskiner-facit.docx" },
+        { label: "Inlägg vecka 6 (PDF)", href: "kurs/classroom-pack/vecka-06/larare-inlagg-vecka6.pdf" },
+        { label: "Inlägg vecka 6 (Word)", href: "kurs/classroom-pack/vecka-06/larare-inlagg-vecka6.docx" }
+      ],
+      pptx: "pptx/vecka-06.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v6-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v6-vecka6.md"]
+    },
+    "7": {
+      elevFiles: [
+        { label: "Elevblad tavla och verktyg (PDF)", href: "kurs/classroom-pack/vecka-07/elev-tavla-verktyg.pdf" },
+        { label: "Elevblad tavla och verktyg (Word)", href: "kurs/classroom-pack/vecka-07/elev-tavla-verktyg.docx" },
+        { label: "Lektion 7.1 Eltavla (PDF)", href: "kurs/classroom-pack/vecka-07/lektion-7.1-eltavla.pdf" },
+        { label: "Lektion 7.1 Eltavla (Word)", href: "kurs/classroom-pack/vecka-07/lektion-7.1-eltavla.docx" },
+        { label: "Lektion 8.1 Verktyg (PDF)", href: "kurs/classroom-pack/vecka-07/lektion-8.1-verktyg.pdf" },
+        { label: "Lektion 8.1 Verktyg (Word)", href: "kurs/classroom-pack/vecka-07/lektion-8.1-verktyg.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad tavla och verktyg (PDF)", href: "kurs/classroom-pack/vecka-07/elev-tavla-verktyg.pdf" },
+        { label: "Elevblad tavla och verktyg (Word)", href: "kurs/classroom-pack/vecka-07/elev-tavla-verktyg.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 7.1 Eltavla (PDF)", href: "kurs/classroom-pack/vecka-07/lektion-7.1-eltavla.pdf" },
+        { label: "Lektion 7.1 Eltavla (Word)", href: "kurs/classroom-pack/vecka-07/lektion-7.1-eltavla.docx" },
+        { label: "Lektion 8.1 Verktyg (PDF)", href: "kurs/classroom-pack/vecka-07/lektion-8.1-verktyg.pdf" },
+        { label: "Lektion 8.1 Verktyg (Word)", href: "kurs/classroom-pack/vecka-07/lektion-8.1-verktyg.docx" }
+      ],
+      elevMd: "kurs/elevblad/v7-tavla-verktyg-elev.md",
+      larareFiles: [
+        { label: "Facit tavla och verktyg (PDF)", href: "kurs/classroom-pack/vecka-07/larare-tavla-verktyg-facit.pdf" },
+        { label: "Facit tavla och verktyg (Word)", href: "kurs/classroom-pack/vecka-07/larare-tavla-verktyg-facit.docx" },
+        { label: "Inlägg vecka 7 (PDF)", href: "kurs/classroom-pack/vecka-07/larare-inlagg-vecka7.pdf" },
+        { label: "Inlägg vecka 7 (Word)", href: "kurs/classroom-pack/vecka-07/larare-inlagg-vecka7.docx" },
+        { label: "Inlägg vecka 7b (PDF)", href: "kurs/classroom-pack/vecka-07/larare-inlagg-vecka7b.pdf" },
+        { label: "Inlägg vecka 7b (Word)", href: "kurs/classroom-pack/vecka-07/larare-inlagg-vecka7b.docx" }
+      ],
+      pptx: "pptx/vecka-07.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v7-quiz.md", "kurs/lararhandledning/classroom-v8-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v7-vecka7.md", "kurs/lararhandledning/classroom-v7b-vecka7.md"]
+    },
+    "8": {
+      elevFiles: [
+        { label: "Elevblad ritning och hållkrets (PDF)", href: "kurs/classroom-pack/vecka-08/elev-ritning-hallkrets.pdf" },
+        { label: "Elevblad ritning och hållkrets (Word)", href: "kurs/classroom-pack/vecka-08/elev-ritning-hallkrets.docx" },
+        { label: "Lektion 9.1 Ritningar (PDF)", href: "kurs/classroom-pack/vecka-08/lektion-9.1-ritningar.pdf" },
+        { label: "Lektion 9.1 Ritningar (Word)", href: "kurs/classroom-pack/vecka-08/lektion-9.1-ritningar.docx" },
+        { label: "Lektion 10.1 Hållkrets (PDF)", href: "kurs/classroom-pack/vecka-08/lektion-10.1-hallkrets.pdf" },
+        { label: "Lektion 10.1 Hållkrets (Word)", href: "kurs/classroom-pack/vecka-08/lektion-10.1-hallkrets.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad ritning och hållkrets (PDF)", href: "kurs/classroom-pack/vecka-08/elev-ritning-hallkrets.pdf" },
+        { label: "Elevblad ritning och hållkrets (Word)", href: "kurs/classroom-pack/vecka-08/elev-ritning-hallkrets.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 9.1 Ritningar (PDF)", href: "kurs/classroom-pack/vecka-08/lektion-9.1-ritningar.pdf" },
+        { label: "Lektion 9.1 Ritningar (Word)", href: "kurs/classroom-pack/vecka-08/lektion-9.1-ritningar.docx" },
+        { label: "Lektion 10.1 Hållkrets (PDF)", href: "kurs/classroom-pack/vecka-08/lektion-10.1-hallkrets.pdf" },
+        { label: "Lektion 10.1 Hållkrets (Word)", href: "kurs/classroom-pack/vecka-08/lektion-10.1-hallkrets.docx" }
+      ],
+      elevMd: "kurs/elevblad/v8-ritning-hallkrets-elev.md",
+      larareFiles: [
+        { label: "Facit ritning och hållkrets (PDF)", href: "kurs/classroom-pack/vecka-08/larare-ritning-hallkrets-facit.pdf" },
+        { label: "Facit ritning och hållkrets (Word)", href: "kurs/classroom-pack/vecka-08/larare-ritning-hallkrets-facit.docx" },
+        { label: "Inlägg vecka 8 (PDF)", href: "kurs/classroom-pack/vecka-08/larare-inlagg-vecka8.pdf" },
+        { label: "Inlägg vecka 8 (Word)", href: "kurs/classroom-pack/vecka-08/larare-inlagg-vecka8.docx" },
+        { label: "Inlägg vecka 8b (PDF)", href: "kurs/classroom-pack/vecka-08/larare-inlagg-vecka8b.pdf" },
+        { label: "Inlägg vecka 8b (Word)", href: "kurs/classroom-pack/vecka-08/larare-inlagg-vecka8b.docx" }
+      ],
+      pptx: "pptx/vecka-08.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v9-quiz.md", "kurs/lararhandledning/classroom-v10-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v8-vecka8.md", "kurs/lararhandledning/classroom-v8b-vecka8.md"]
+    },
+    "9": {
+      elevFiles: [
+        { label: "Elevblad arbete och felsök (PDF)", href: "kurs/classroom-pack/vecka-09/elev-arbete-felsok.pdf" },
+        { label: "Elevblad arbete och felsök (Word)", href: "kurs/classroom-pack/vecka-09/elev-arbete-felsok.docx" },
+        { label: "Lektion 11.1 Arbete, IP, intyg (PDF)", href: "kurs/classroom-pack/vecka-09/lektion-11.1-arbete-ip-intyg.pdf" },
+        { label: "Lektion 11.1 Arbete, IP, intyg (Word)", href: "kurs/classroom-pack/vecka-09/lektion-11.1-arbete-ip-intyg.docx" },
+        { label: "Lektion 12.1 Felsökning (PDF)", href: "kurs/classroom-pack/vecka-09/lektion-12.1-felsokning.pdf" },
+        { label: "Lektion 12.1 Felsökning (Word)", href: "kurs/classroom-pack/vecka-09/lektion-12.1-felsokning.docx" },
+        { label: "Skriftligt prov (PDF)", href: "kurs/classroom-pack/vecka-09/elev-skriftligt-prov.pdf" },
+        { label: "Skriftligt prov (Word)", href: "kurs/classroom-pack/vecka-09/elev-skriftligt-prov.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad arbete och felsök (PDF)", href: "kurs/classroom-pack/vecka-09/elev-arbete-felsok.pdf" },
+        { label: "Elevblad arbete och felsök (Word)", href: "kurs/classroom-pack/vecka-09/elev-arbete-felsok.docx" },
+        { label: "Skriftligt prov (PDF)", href: "kurs/classroom-pack/vecka-09/elev-skriftligt-prov.pdf" },
+        { label: "Skriftligt prov (Word)", href: "kurs/classroom-pack/vecka-09/elev-skriftligt-prov.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 11.1 Arbete, IP, intyg (PDF)", href: "kurs/classroom-pack/vecka-09/lektion-11.1-arbete-ip-intyg.pdf" },
+        { label: "Lektion 11.1 Arbete, IP, intyg (Word)", href: "kurs/classroom-pack/vecka-09/lektion-11.1-arbete-ip-intyg.docx" },
+        { label: "Lektion 12.1 Felsökning (PDF)", href: "kurs/classroom-pack/vecka-09/lektion-12.1-felsokning.pdf" },
+        { label: "Lektion 12.1 Felsökning (Word)", href: "kurs/classroom-pack/vecka-09/lektion-12.1-felsokning.docx" }
+      ],
+      elevMd: "kurs/elevblad/v9-arbete-felsok-elev.md",
+      larareFiles: [
+        { label: "Facit arbete och felsök (PDF)", href: "kurs/classroom-pack/vecka-09/larare-arbete-felsok-facit.pdf" },
+        { label: "Facit arbete och felsök (Word)", href: "kurs/classroom-pack/vecka-09/larare-arbete-felsok-facit.docx" },
+        { label: "Inlägg vecka 9 (PDF)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-vecka9.pdf" },
+        { label: "Inlägg vecka 9 (Word)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-vecka9.docx" },
+        { label: "Inlägg vecka 9b (PDF)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-vecka9b.pdf" },
+        { label: "Inlägg vecka 9b (Word)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-vecka9b.docx" },
+        { label: "Inlägg prov vecka 9 (PDF)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-prov-vecka9.pdf" },
+        { label: "Inlägg prov vecka 9 (Word)", href: "kurs/classroom-pack/vecka-09/larare-inlagg-prov-vecka9.docx" },
+        { label: "Facit skriftligt prov (PDF)", href: "kurs/classroom-pack/vecka-09/larare-skriftligt-prov-facit.pdf" },
+        { label: "Facit skriftligt prov (Word)", href: "kurs/classroom-pack/vecka-09/larare-skriftligt-prov-facit.docx" }
+      ],
+      pptx: "pptx/vecka-09.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v11-quiz.md", "kurs/lararhandledning/classroom-v12-quiz.md"],
+      inlagg: ["kurs/lararhandledning/classroom-v9-vecka9.md", "kurs/lararhandledning/classroom-v9b-vecka9.md"]
     }
   };
+
   function byId(id) { return document.getElementById(id); }
   function toHex(buf) {
     return Array.from(new Uint8Array(buf)).map(function (b) {
@@ -290,7 +499,7 @@
         larareFiles: known.larareFiles,
         pptx: known.pptx,
         quizzes: known.quizzes.slice(),
-        inlagg: known.inlagg
+        inlagg: Array.isArray(known.inlagg) ? known.inlagg.slice() : (known.inlagg ? [known.inlagg] : [])
       };
     }
     return {
@@ -303,7 +512,7 @@
       larareFiles: [],
       pptx: "pptx/vecka-" + calPad(cal) + ".pptx",
       quizzes: quizzes,
-      inlagg: ""
+      inlagg: []
     };
   }
   function weekHeroHtml(cal) {
@@ -352,18 +561,16 @@
     html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
     if (!pack.ready) {
       html += "<article class=\"coming\"><h3>Pack kommer</h3><p>PDF och Word saknas. Bildspel och quiz finns.</p></article>";
-      html += "<div class=\"pack-section\" data-pack=\"larare\"><ul class=\"pack-list\">";
-      html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li>";
-      html += "</ul>" + teacherQuizListHtml(pack) + "</div>";
+      html += "<div class=\"pack-section\" data-pack=\"bildspel\"><ul class=\"pack-list\">";
+      html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li></ul></div>";
+      html += "<div class=\"pack-section\" data-pack=\"quiz\">" + teacherQuizListHtml(pack) + "</div>";
       return html;
     }
     html += "<div class=\"pack-section\" data-pack=\"elev\">" + teacherFileListHtml(pack.elevFiles) + "</div>";
-    html += "<div class=\"pack-section\" data-pack=\"larare\"><ul class=\"pack-list\">";
-    html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li>";
-    (pack.larareFiles || []).forEach(function (f) {
-      html += "<li>" + packDl(f.href, f.label) + "</li>";
-    });
-    html += "</ul>" + teacherQuizListHtml(pack) + "</div>";
+    html += "<div class=\"pack-section\" data-pack=\"bildspel\"><ul class=\"pack-list\">";
+    html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li></ul></div>";
+    html += "<div class=\"pack-section\" data-pack=\"quiz\">" + teacherQuizListHtml(pack) + "</div>";
+    html += "<div class=\"pack-section\" data-pack=\"larare\">" + teacherFileListHtml(pack.larareFiles) + "</div>";
     return html;
   }
   function studentPostText(md) {
@@ -897,21 +1104,29 @@
     html += "<div id=\"stream-root\"></div>";
     if (!opts.noTurn) html += calTurn(cal);
     setMain(html, true);
-    var inlaggP = pack.inlagg
-      ? fetch(pack.inlagg).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; })
-      : Promise.resolve("");
-    var quizPath = pack.quizzes && pack.quizzes[0] ? pack.quizzes[0] : "";
-    var quizP = quizPath
-      ? fetch(quizPath).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; })
-      : Promise.resolve("");
-    Promise.all([inlaggP, quizP]).then(function (parts) {
+    var inlaggPaths = pack.inlagg || [];
+    var inlaggPs = inlaggPaths.map(function (path) {
+      return fetch(path).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; });
+    });
+    var quizPaths = pack.quizzes || [];
+    var quizPs = quizPaths.map(function (path) {
+      return fetch(path).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; });
+    });
+    Promise.all(inlaggPs.concat(quizPs)).then(function (parts) {
       var root = byId("stream-root");
       if (!root) return;
       var out = "";
-      var inlaggMd = studentPostText(parts[0] || "");
-      out += "<article class=\"stream-post\" data-type=\"inlagg\">";
-      out += inlaggMd ? mdHtml(inlaggMd, pack.inlagg) : "<p>Inget inlägg.</p>";
-      out += "</article>";
+      var inlaggN = inlaggPaths.length;
+      var i, inlaggMd, qPath, quizMd, quiz, bound = false;
+      if (!inlaggN) {
+        out += "<article class=\"stream-post\" data-type=\"inlagg\"><p>Inget inlägg.</p></article>";
+      }
+      for (i = 0; i < inlaggN; i++) {
+        inlaggMd = studentPostText(parts[i] || "");
+        out += "<article class=\"stream-post\" data-type=\"inlagg\">";
+        out += inlaggMd ? mdHtml(inlaggMd, inlaggPaths[i]) : "<p>Inget inlägg.</p>";
+        out += "</article>";
+      }
       out += "<article class=\"stream-post\" data-type=\"material\">";
       out += studentFileListHtml(pack.materialFiles && pack.materialFiles.length ? pack.materialFiles : pack.elevFiles);
       out += "</article>";
@@ -919,15 +1134,21 @@
       out += studentFileListHtml(pack.uppgiftFiles);
       if (pack.elevMd) out += "<p><a href=\"#/" + pack.elevMd + "\">Läs på skärmen</a></p>";
       out += "</article>";
-      var quizMd = parts[1] || "";
-      var quiz = parseQuiz(quizMd);
-      out += "<article class=\"stream-post\" data-type=\"quiz\">";
-      if (quiz) out += renderQuiz(quiz, quizPath);
-      else if (quizPath) out += "<p><a href=\"#/" + quizPath + "\">Öppna quiz</a></p>";
-      else out += "<p>Material kommer</p>";
-      out += "</article>";
+      if (!quizPaths.length) {
+        out += "<article class=\"stream-post\" data-type=\"quiz\"><p>Material kommer</p></article>";
+      }
+      for (i = 0; i < quizPaths.length; i++) {
+        qPath = quizPaths[i];
+        quizMd = parts[inlaggN + i] || "";
+        quiz = parseQuiz(quizMd);
+        out += "<article class=\"stream-post\" data-type=\"quiz\">";
+        if (quiz) { out += renderQuiz(quiz, qPath); bound = true; }
+        else if (qPath) out += "<p><a href=\"#/" + qPath + "\">Öppna quiz</a></p>";
+        else out += "<p>Material kommer</p>";
+        out += "</article>";
+      }
       root.innerHTML = out;
-      if (quiz) bindQuiz();
+      if (bound) bindQuiz();
     });
   }
   function showWeek(id) {
