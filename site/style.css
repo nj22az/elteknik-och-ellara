@@ -975,6 +975,48 @@ a.card:hover, .card:hover { border: var(--rule-heavy); }
 
 .pack-list a:hover { font-weight: 600; }
 
+.type-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem;
+  margin: 0 0 1.2rem;
+}
+.post-type {
+  display: inline-flex;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.15em 0.45em;
+}
+.coming {
+  border: var(--rule);
+  padding: 1.4rem 1.2rem;
+  margin: 1rem 0;
+}
+.main a.pack-download,
+.pack-list a.pack-download {
+  display: inline-flex;
+  align-items: center;
+  background: var(--ink);
+  color: var(--paper);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25em 0.55em;
+  margin: .35rem 0;
+}
+.pack-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+
 .stream-post .quiz { margin-top: .4rem; }
 .stream-post .quiz .q { margin: .7rem 0; }
 
