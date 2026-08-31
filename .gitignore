@@ -2,3 +2,6 @@
 /src/
 __pycache__/
 .DS_Store
+
+# Classroom-pack PDFs are the handouts the teacher site downloads.
+!kurs/classroom-pack/**/*.pdf
