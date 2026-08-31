@@ -434,6 +434,15 @@ hr.rule {{
   font-size: 11pt;
   line-height: 1.45;
 }}
+pre {{
+  font-family: "IBM Plex Sans", "Liberation Sans", "DejaVu Sans", sans-serif;
+  font-size: 8.5pt;
+  line-height: 1.28;
+  white-space: pre;
+  margin: 0 0 8px 0;
+  padding: 6px 8px;
+  border: 1px solid #{INK};
+}}
 a {{ color: #{INK}; text-decoration: none; }}
 """
 
@@ -886,63 +895,49 @@ def md_body_html(md: str, extra_top: str = "") -> str:
 
 
 def doc_lektion_11() -> tuple[str, str, bool]:
-    md = (ROOT / "kurs/lektioner/1.1-stotar.md").read_text(encoding="utf-8")
-    fig = ROOT / "bok/figur-1-1-stotvag-ventil.png"
-    extra = chrome("M01", "Elsäkerhet", "V1", "Vecka 1", "Elteknik och ellära 45 p")
-    extra += f"""
-<div class="fig">
-  <img src="{html.escape(fig.resolve().as_uri())}" alt="Figur 1.1 Stötväg — magnetventil"/>
-  <div class="cap">Figur 1.1 — stötväg, magnetventil, skrov. Rita inte megger här.</div>
-</div>"""
-    # Put figure after chrome, before parsed title — the md already has h1.
-    # Better: parse md, inject figure after first paragraph block.
-    body = chrome("M01", "Elsäkerhet", "V1", "Vecka 1", "Elteknik och ellära 45 p")
-    body += md_body_html(md)
-    # insert figure after h1
-    fig_html = f"""
-<div class="fig">
-  <img src="{html.escape(fig.resolve().as_uri())}" alt="Figur 1.1 Stötväg — magnetventil"/>
-  <div class="cap">Figur 1.1 Stötväg — magnetventil (bok). Inte megger. Inte 1 MΩ som skall.</div>
-</div>"""
-    body = body.replace("</h1>", "</h1>" + fig_html, 1)
-    return body, "Elteknik och ellära 45 p · V1 · lektion 1.1 stötväg", False
+    return doc_lektion(
+        ROOT / "kurs/lektioner/1.1-stotar.md",
+        ROOT / "bok/figur-1-1-stotvag-ventil.png",
+        "M01",
+        "Elsäkerhet",
+        "V1",
+        "Vecka 1",
+        "Elteknik och ellära 45 p · V1 · lektion 1.1 stötväg",
+        "Figur 1.1 Stötväg — magnetventil (bok). Inte megger. Inte 1 MΩ som skall.",
+    )
 
 
 def doc_lektion_21() -> tuple[str, str, bool]:
-    md = (ROOT / "kurs/lektioner/2.1-isolering.md").read_text(encoding="utf-8")
-    fig = ROOT / "bok/figur-2-1-isolering-kedja.png"
-    body = chrome("M02", "Isolering", "V2", "Vecka 2", "Elteknik och ellära 45 p")
-    body += md_body_html(md)
-    fig_html = f"""
-<div class="fig">
-  <img src="{html.escape(fig.resolve().as_uri())}" alt="Figur 2.1 Isolering före arbete"/>
-  <div class="cap">Figur 2.1 Isolering före arbete (bok). Kedja från–lås–prova–megger. 1 MΩ = upplysning.</div>
-</div>"""
-    body = body.replace("</h1>", "</h1>" + fig_html, 1)
-    return body, "Elteknik och ellära 45 p · V2 · lektion 2.1 isolering", False
+    return doc_lektion(
+        ROOT / "kurs/lektioner/2.1-isolering.md",
+        ROOT / "bok/figur-2-1-isolering-kedja.png",
+        "M02",
+        "Isolering",
+        "V2",
+        "Vecka 2",
+        "Elteknik och ellära 45 p · V2 · lektion 2.1 isolering",
+        "Figur 2.1 Isolering före arbete (bok). Kedja från–lås–prova–megger. 1 MΩ = upplysning.",
+    )
 
 
 def doc_inlagg(week: int) -> tuple[str, str, bool]:
     if week == 1:
-        path = ROOT / "kurs/lararhandledning/classroom-v1-vecka1.md"
-        m, v, name = "M01", "V1", "Elsäkerhet"
-        title = "Classroom-inlägg vecka 1"
-        footer = "Elteknik och ellära 45 p · V1 · LÄRARE inlägg"
-    else:
-        path = ROOT / "kurs/lararhandledning/classroom-v2-vecka2.md"
-        m, v, name = "M02", "V2", "Isolering"
-        title = "Classroom-inlägg vecka 2"
-        footer = "Elteknik och ellära 45 p · V2 · LÄRARE inlägg"
-    md = path.read_text(encoding="utf-8")
-    # Split title / instruction / post body
-    parts = re.split(r"\n---\n", md, maxsplit=1)
-    head = parts[0]
-    post = parts[1].strip() if len(parts) > 1 else md
-    body = chrome(m, name, v, f"Vecka {week}", "Elteknik och ellära 45 p")
-    body += md_body_html(head)
-    body += f'<div class="post">{inline_html(post)}</div>'
-    body += "<p style=\"margin-top:10px\"><em>Klistra in som det står. Inte studentblad.</em></p>"
-    return body, footer, True
+        return doc_inlagg_from(
+            ROOT / "kurs/lararhandledning/classroom-v1-vecka1.md",
+            "M01",
+            "Elsäkerhet",
+            "V1",
+            "Vecka 1",
+            "Elteknik och ellära 45 p · V1 · LÄRARE inlägg",
+        )
+    return doc_inlagg_from(
+        ROOT / "kurs/lararhandledning/classroom-v2-vecka2.md",
+        "M02",
+        "Isolering",
+        "V2",
+        "Vecka 2",
+        "Elteknik och ellära 45 p · V2 · LÄRARE inlägg",
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -1483,23 +1478,24 @@ COURSE = "Elteknik och ellära 45 p"
 
 
 def doc_lektion(
-    src: Path,
+    md_path: Path | str,
+    figure_path: Path | str | None,
     m: str,
     mname: str,
     v: str,
     vname: str,
-    figure: Path | None,
-    figure_cap: str,
     footer: str,
+    fig_cap: str,
 ) -> tuple[str, str, bool]:
-    md = src.read_text(encoding="utf-8")
+    md = Path(md_path).read_text(encoding="utf-8")
     body = chrome(m, mname, v, vname, COURSE)
     body += md_body_html(md)
-    if figure is not None and figure.exists():
+    if figure_path:
+        fig = Path(figure_path)
         fig_html = f"""
 <div class="fig">
-  <img src="{html.escape(figure.resolve().as_uri())}" alt="{html.escape(figure_cap)}"/>
-  <div class="cap">{html.escape(figure_cap)}</div>
+  <img src="{html.escape(fig.resolve().as_uri())}" alt="{html.escape(fig_cap)}"/>
+  <div class="cap">{html.escape(fig_cap)}</div>
 </div>"""
         if "</h1>" in body:
             body = body.replace("</h1>", "</h1>" + fig_html, 1)
@@ -1508,8 +1504,8 @@ def doc_lektion(
     return body, footer, False
 
 
-def doc_post(src: Path, m: str, mname: str, v: str, vname: str, footer: str) -> tuple[str, str, bool]:
-    md = src.read_text(encoding="utf-8")
+def doc_inlagg_from(path: Path | str, m: str, mname: str, v: str, vname: str, footer: str) -> tuple[str, str, bool]:
+    md = Path(path).read_text(encoding="utf-8")
     parts = re.split(r"\n---\n", md, maxsplit=1)
     head = parts[0]
     post = parts[1].strip() if len(parts) > 1 else ""
@@ -1521,7 +1517,7 @@ def doc_post(src: Path, m: str, mname: str, v: str, vname: str, footer: str) -> 
     return body, footer, True
 
 
-def doc_md_sheet(
+def doc_md(
     src: Path,
     m: str,
     mname: str,
@@ -1678,6 +1674,8 @@ WEEK_EXTEND = [
         "vname": "Vecka 7",
         "heading": "Vecka 7 — V7 · M07 Eltavla + M08 Verktyg",
         "blurb": "V7 · M07 Eltavla + M08 Verktyg. A4. Look-not-touch på 440. Inte live MSB. Inte megger på spänning.",
+        "ticket_m": "M07",
+        "ticket_mname": "Eltavla + verktyg",
         "lessons": [
             L(
                 "kurs/lektioner/7.1-eltavla.md",
@@ -1722,6 +1720,8 @@ WEEK_EXTEND = [
         "vname": "Vecka 8",
         "heading": "Vecka 8 — V8 · M09 Ritningar + M10 Hållkrets",
         "blurb": "V8 · M09 Ritningar + M10 Hållkrets. A4. Schema innan durk. Inte Arduino. Inte live 440.",
+        "ticket_m": "M09",
+        "ticket_mname": "Ritningar + hållkrets",
         "lessons": [
             L(
                 "kurs/lektioner/9.1-ritningar.md",
@@ -1765,7 +1765,9 @@ WEEK_EXTEND = [
         "v": "V9",
         "vname": "Vecka 9",
         "heading": "Vecka 9 — V9 · M11 Elarbete + M12 Felsökning",
-        "blurb": "V9 · M11 Elarbete + M12 Felsökning. A4. Inte TS-blankett. Inte PE-jakt. Inte live 440. Facit till skriftligt prov ligger inte här.",
+        "blurb": "V9 · M11 Elarbete + M12 Felsökning. A4. Inte TS-blankett. Inte PE-jakt. Inte live 440. Facit är läraronly (filnamn *facit*). Inte quiz.",
+        "ticket_m": "M11",
+        "ticket_mname": "Elarbete + felsökning",
         "lessons": [
             L(
                 "kurs/lektioner/11.1-arbete-ip-intyg.md",
@@ -1856,13 +1858,13 @@ def build_week_extend(spec: dict) -> None:
         stem = lesson["out"]
         body, footer, teacher = doc_lektion(
             src,
+            lesson["figure"],
             lesson["m"],
             lesson["mname"],
             v,
             vname,
-            lesson["figure"],
-            lesson["figure_cap"],
             lesson["footer"],
+            lesson["figure_cap"],
         )
         pdf = week_dir / f"{stem}.pdf"
         docx = week_dir / f"{stem}.docx"
@@ -1889,7 +1891,7 @@ def build_week_extend(spec: dict) -> None:
             print(f"SKIP missing post {src.relative_to(ROOT)}")
             continue
         stem = post["out"]
-        body, footer, teacher = doc_post(src, post["m"], post["mname"], v, vname, post["footer"])
+        body, footer, teacher = doc_inlagg_from(src, post["m"], post["mname"], v, vname, post["footer"])
         pdf = week_dir / f"{stem}.pdf"
         docx = week_dir / f"{stem}.docx"
         print(f"PDF  {pdf.relative_to(ROOT)}")
@@ -1912,17 +1914,70 @@ def build_week_extend(spec: dict) -> None:
         print(f"DOCX {docx.relative_to(ROOT)}")
         teacher_stems.append(stem)
 
-    fallback_m = spec["lessons"][0]["m"] if spec["lessons"] else "M"
-    fallback_name = spec["lessons"][0]["mname"] if spec["lessons"] else ""
+    if spec["week"] == 9:
+        exam_jobs = [
+            {
+                "src": ROOT / "kurs/prov/skriftligt-prov-elev.md",
+                "out": "elev-skriftligt-prov",
+                "m": "PROV",
+                "mname": "Skriftligt prov",
+                "footer": "Elteknik och ellära 45 p · V9 · Elevblad · skriftligt prov",
+                "teacher": False,
+            },
+            {
+                "src": ROOT / "kurs/prov/skriftligt-prov-facit.md",
+                "out": "larare-skriftligt-prov-facit",
+                "m": "PROV",
+                "mname": "Skriftligt prov",
+                "footer": "Elteknik och ellära 45 p · V9 · LÄRARE facit skriftligt prov",
+                "teacher": True,
+            },
+        ]
+        for job in exam_jobs:
+            src = job["src"]
+            if not src.exists():
+                raise FileNotFoundError(src)
+            if job["teacher"] and "facit" not in job["out"]:
+                raise RuntimeError(f"exam facit filename must contain facit: {job['out']}")
+            if (not job["teacher"]) and ("facit" in job["out"] or job["out"].startswith("larare-")):
+                raise RuntimeError(f"student exam must not be teacher-named: {job['out']}")
+            body, footer, teacher_flag = doc_md(
+                src,
+                job["m"],
+                job["mname"],
+                v,
+                vname,
+                job["footer"],
+                job["teacher"],
+            )
+            pdf = week_dir / f"{job['out']}.pdf"
+            docx = week_dir / f"{job['out']}.docx"
+            print(f"PDF  {pdf.relative_to(ROOT)}")
+            write_pdf(body, footer, teacher_flag, pdf)
+            write_docx_from_md(
+                src.read_text(encoding="utf-8"),
+                docx,
+                teacher=teacher_flag,
+                footer=footer,
+                m=job["m"],
+                mname=job["mname"],
+                v=v,
+                vname=vname,
+            )
+            print(f"DOCX {docx.relative_to(ROOT)}")
+            (teacher_stems if job["teacher"] else elev_stems).append(job["out"])
+
+    fallback_m = spec.get("ticket_m") or (spec["lessons"][0]["m"] if spec["lessons"] else "M")
+    fallback_name = spec.get("ticket_mname") or (spec["lessons"][0]["mname"] if spec["lessons"] else "")
     for src, stem, teacher, slug in elevblad_sources(spec["week"]):
-        if "facit" in stem and stem.startswith("elev-"):
+        if stem.startswith("elev-") and "facit" in stem:
             raise RuntimeError(f"facit must not use elev-* name: {stem}")
         footer = (
             f"{COURSE} · {v} · LÄRARE facit {slug}"
             if teacher
             else f"{COURSE} · {v} · elevblad {slug}"
         )
-        body, footer, teacher_flag = doc_md_sheet(
+        body, footer, teacher_flag = doc_md(
             src, fallback_m, fallback_name, v, vname, footer, teacher
         )
         pdf = week_dir / f"{stem}.pdf"
@@ -1942,6 +1997,8 @@ def build_week_extend(spec: dict) -> None:
         print(f"DOCX {docx.relative_to(ROOT)}")
         (teacher_stems if teacher else elev_stems).append(stem)
 
+    elev_stems.sort(key=lambda s: 0 if s.startswith("elev-") else 1)
+    teacher_stems.sort(key=lambda s: 0 if "facit" in s else 1)
     write_week_readme(spec, elev_stems, teacher_stems)
 
 
