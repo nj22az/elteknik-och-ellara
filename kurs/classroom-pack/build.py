@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Build A4 PDF + Word Classroom packs for Elteknik och ellära, weeks 1–2.
+"""Build A4 PDF + Word Classroom packs for Elteknik och ellära, weeks 1–9.
 
 Sources are the existing elevblad, lektioner and classroom posts.
-Does not invent legal text. Print: IBM Plex Sans, ink on paper, 0 radius.
+Does not invent legal text. Does not invent elevblad when none exist.
+Print: IBM Plex Sans, ink on paper, 0 radius.
 """
 from __future__ import annotations
 
@@ -1474,6 +1475,476 @@ def write_facit_megger_docx(dest: Path):
     doc.save(dest)
 
 
+# ---------------------------------------------------------------------------
+# Weeks 3–9 (generic lektion + inlägg; elevblad/facit only if sources exist)
+# ---------------------------------------------------------------------------
+
+COURSE = "Elteknik och ellära 45 p"
+
+
+def doc_lektion(
+    src: Path,
+    m: str,
+    mname: str,
+    v: str,
+    vname: str,
+    figure: Path | None,
+    figure_cap: str,
+    footer: str,
+) -> tuple[str, str, bool]:
+    md = src.read_text(encoding="utf-8")
+    body = chrome(m, mname, v, vname, COURSE)
+    body += md_body_html(md)
+    if figure is not None and figure.exists():
+        fig_html = f"""
+<div class="fig">
+  <img src="{html.escape(figure.resolve().as_uri())}" alt="{html.escape(figure_cap)}"/>
+  <div class="cap">{html.escape(figure_cap)}</div>
+</div>"""
+        if "</h1>" in body:
+            body = body.replace("</h1>", "</h1>" + fig_html, 1)
+        else:
+            body = fig_html + body
+    return body, footer, False
+
+
+def doc_post(src: Path, m: str, mname: str, v: str, vname: str, footer: str) -> tuple[str, str, bool]:
+    md = src.read_text(encoding="utf-8")
+    parts = re.split(r"\n---\n", md, maxsplit=1)
+    head = parts[0]
+    post = parts[1].strip() if len(parts) > 1 else ""
+    body = chrome(m, mname, v, vname, COURSE)
+    body += md_body_html(head)
+    if post:
+        body += f'<div class="post">{inline_html(post)}</div>'
+    body += '<p style="margin-top:10px"><em>Klistra in som det står. Inte studentblad.</em></p>'
+    return body, footer, True
+
+
+def doc_md_sheet(
+    src: Path,
+    m: str,
+    mname: str,
+    v: str,
+    vname: str,
+    footer: str,
+    teacher: bool,
+) -> tuple[str, str, bool]:
+    md = src.read_text(encoding="utf-8")
+    body = chrome(m, mname, v, vname, COURSE)
+    body += md_body_html(md)
+    return body, footer, teacher
+
+
+def L(src, out, m, mname, figure, figure_cap, footer):
+    return {
+        "src": ROOT / src,
+        "out": out,
+        "m": m,
+        "mname": mname,
+        "figure": ROOT / figure if figure else None,
+        "figure_cap": figure_cap,
+        "footer": footer,
+    }
+
+
+def P(src, out, m, mname, footer):
+    return {
+        "src": ROOT / src,
+        "out": out,
+        "m": m,
+        "mname": mname,
+        "footer": footer,
+    }
+
+
+WEEK_EXTEND = [
+    {
+        "week": 3,
+        "dir": "vecka-03",
+        "v": "V3",
+        "vname": "Vecka 3",
+        "heading": "Vecka 3 — V3 · M03 Resistiv DC",
+        "blurb": "V3 · M03 Resistiv DC. A4. Räkna och mät på papper. Inte händer-DMM som läxa. Inte trefas.",
+        "lessons": [
+            L(
+                "kurs/lektioner/3.1-dc.md",
+                "lektion-3.1-dc",
+                "M03",
+                "Resistiv DC",
+                "bok/figur-3-1-dc-matning.png",
+                "Figur 3.1 DC-mätning (bok). Serie/parallell. Inte trefas. Inte live tavla.",
+                "Elteknik och ellära 45 p · V3 · lektion 3.1 DC",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v3-vecka3.md",
+                "larare-inlagg-vecka3",
+                "M03",
+                "Resistiv DC",
+                "Elteknik och ellära 45 p · V3 · LÄRARE inlägg",
+            ),
+        ],
+    },
+    {
+        "week": 4,
+        "dir": "vecka-04",
+        "v": "V4",
+        "vname": "Vecka 4",
+        "heading": "Vecka 4 — V4 · M04 Enfas AC",
+        "blurb": "V4 · M04 Enfas AC. A4. rms mot topp. Inte trefas. Inte 440 V. Inte live tavla.",
+        "lessons": [
+            L(
+                "kurs/lektioner/4.1-enfas-ac.md",
+                "lektion-4.1-enfas-ac",
+                "M04",
+                "Enfas AC",
+                "bok/figur-4-1-enfas-ac.png",
+                "Figur 4.1 Enfas AC (bok). rms mot topp. Inte trefas. Inte 440 V.",
+                "Elteknik och ellära 45 p · V4 · lektion 4.1 enfas AC",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v4-vecka4.md",
+                "larare-inlagg-vecka4",
+                "M04",
+                "Enfas AC",
+                "Elteknik och ellära 45 p · V4 · LÄRARE inlägg",
+            ),
+        ],
+    },
+    {
+        "week": 5,
+        "dir": "vecka-05",
+        "v": "V5",
+        "vname": "Vecka 5",
+        "heading": "Vecka 5 — V5 · M05 Trefas",
+        "blurb": "V5 · M05 Trefas. A4. Linje mot fas. 440 V = look-not-touch. Inte live tavla.",
+        "lessons": [
+            L(
+                "kurs/lektioner/5.1-trefas.md",
+                "lektion-5.1-trefas",
+                "M05",
+                "Trefas",
+                "bok/figur-5-1-trefas-spanning.png",
+                "Figur 5.1 Trefas (bok). Linje mot fas. 440 V = look-not-touch.",
+                "Elteknik och ellära 45 p · V5 · lektion 5.1 trefas",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v5-vecka5.md",
+                "larare-inlagg-vecka5",
+                "M05",
+                "Trefas",
+                "Elteknik och ellära 45 p · V5 · LÄRARE inlägg",
+            ),
+        ],
+    },
+    {
+        "week": 6,
+        "dir": "vecka-06",
+        "v": "V6",
+        "vname": "Vecka 6",
+        "heading": "Vecka 6 — V6 · M06 Maskiner",
+        "blurb": "V6 · M06 Maskiner. A4. Motor/generator. Inte öppna 440-kåpa. Inte live MSB.",
+        "lessons": [
+            L(
+                "kurs/lektioner/6.1-maskiner.md",
+                "lektion-6.1-maskiner",
+                "M06",
+                "Maskiner",
+                "bok/figur-6-1-maskiner.png",
+                "Figur 6.1 Maskiner (bok). Motor/generator. Inte öppna 440-kåpa.",
+                "Elteknik och ellära 45 p · V6 · lektion 6.1 maskiner",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v6-vecka6.md",
+                "larare-inlagg-vecka6",
+                "M06",
+                "Maskiner",
+                "Elteknik och ellära 45 p · V6 · LÄRARE inlägg",
+            ),
+        ],
+    },
+    {
+        "week": 7,
+        "dir": "vecka-07",
+        "v": "V7",
+        "vname": "Vecka 7",
+        "heading": "Vecka 7 — V7 · M07 Eltavla + M08 Verktyg",
+        "blurb": "V7 · M07 Eltavla + M08 Verktyg. A4. Look-not-touch på 440. Inte live MSB. Inte megger på spänning.",
+        "lessons": [
+            L(
+                "kurs/lektioner/7.1-eltavla.md",
+                "lektion-7.1-eltavla",
+                "M07",
+                "Eltavla",
+                "bok/figur-7-1-eltavla.png",
+                "Figur 7.1 Eltavla (bok). Huvudtavla vs grupptavla. Inte live MSB.",
+                "Elteknik och ellära 45 p · V7 · lektion 7.1 eltavla",
+            ),
+            L(
+                "kurs/lektioner/8.1-verktyg.md",
+                "lektion-8.1-verktyg",
+                "M08",
+                "Verktyg",
+                "bok/figur-8-1-verktyg.png",
+                "Figur 8.1 Verktyg (bok). DMM, tvåpol, megger. Inte megger på spänning.",
+                "Elteknik och ellära 45 p · V7 · lektion 8.1 verktyg",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v7-vecka7.md",
+                "larare-inlagg-vecka7",
+                "M07",
+                "Eltavla",
+                "Elteknik och ellära 45 p · V7 · LÄRARE inlägg 7.1",
+            ),
+            P(
+                "kurs/lararhandledning/classroom-v7b-vecka7.md",
+                "larare-inlagg-vecka7b",
+                "M08",
+                "Verktyg",
+                "Elteknik och ellära 45 p · V7 · LÄRARE inlägg 8.1",
+            ),
+        ],
+    },
+    {
+        "week": 8,
+        "dir": "vecka-08",
+        "v": "V8",
+        "vname": "Vecka 8",
+        "heading": "Vecka 8 — V8 · M09 Ritningar + M10 Hållkrets",
+        "blurb": "V8 · M09 Ritningar + M10 Hållkrets. A4. Schema innan durk. Inte Arduino. Inte live 440.",
+        "lessons": [
+            L(
+                "kurs/lektioner/9.1-ritningar.md",
+                "lektion-9.1-ritningar",
+                "M09",
+                "Ritningar",
+                "bok/figur-9-1-ritningar.png",
+                "Figur 9.1 Ritningar (bok). Enlinje mot kretsschema. Inte gissa live.",
+                "Elteknik och ellära 45 p · V8 · lektion 9.1 ritningar",
+            ),
+            L(
+                "kurs/lektioner/10.1-hallkrets.md",
+                "lektion-10.1-hallkrets",
+                "M10",
+                "Hållkrets",
+                "bok/figur-10-1-hallkrets.png",
+                "Figur 10.1 Hållkrets (bok). Start–håll–stopp. Inte Arduino. Inte live 440.",
+                "Elteknik och ellära 45 p · V8 · lektion 10.1 hållkrets",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v8-vecka8.md",
+                "larare-inlagg-vecka8",
+                "M09",
+                "Ritningar",
+                "Elteknik och ellära 45 p · V8 · LÄRARE inlägg 9.1",
+            ),
+            P(
+                "kurs/lararhandledning/classroom-v8b-vecka8.md",
+                "larare-inlagg-vecka8b",
+                "M10",
+                "Hållkrets",
+                "Elteknik och ellära 45 p · V8 · LÄRARE inlägg 10.1",
+            ),
+        ],
+    },
+    {
+        "week": 9,
+        "dir": "vecka-09",
+        "v": "V9",
+        "vname": "Vecka 9",
+        "heading": "Vecka 9 — V9 · M11 Elarbete + M12 Felsökning",
+        "blurb": "V9 · M11 Elarbete + M12 Felsökning. A4. Inte TS-blankett. Inte PE-jakt. Inte live 440. Facit till skriftligt prov ligger inte här.",
+        "lessons": [
+            L(
+                "kurs/lektioner/11.1-arbete-ip-intyg.md",
+                "lektion-11.1-arbete-ip-intyg",
+                "M11",
+                "Elarbete",
+                "bok/figur-11-1-arbete-ip-intyg.png",
+                "Figur 11.1 Elarbete, IP, intyg (bok). Inte TS-blankett. Inte 440-lucka.",
+                "Elteknik och ellära 45 p · V9 · lektion 11.1 elarbete",
+            ),
+            L(
+                "kurs/lektioner/12.1-felsokning.md",
+                "lektion-12.1-felsokning",
+                "M12",
+                "Felsökning",
+                "bok/figur-12-1-felsokning.png",
+                "Figur 12.1 Felsökning (bok). Kedja på papper. Inte PE-jakt. Inte live 440.",
+                "Elteknik och ellära 45 p · V9 · lektion 12.1 felsökning",
+            ),
+        ],
+        "posts": [
+            P(
+                "kurs/lararhandledning/classroom-v9-vecka9.md",
+                "larare-inlagg-vecka9",
+                "M11",
+                "Elarbete",
+                "Elteknik och ellära 45 p · V9 · LÄRARE inlägg 11.1",
+            ),
+            P(
+                "kurs/lararhandledning/classroom-v9b-vecka9.md",
+                "larare-inlagg-vecka9b",
+                "M12",
+                "Felsökning",
+                "Elteknik och ellära 45 p · V9 · LÄRARE inlägg 12.1",
+            ),
+            P(
+                "kurs/lararhandledning/classroom-v-prov-vecka9.md",
+                "larare-inlagg-prov-vecka9",
+                "PROV",
+                "Skriftligt prov",
+                "Elteknik och ellära 45 p · V9 · LÄRARE inlägg skriftligt prov",
+            ),
+        ],
+    },
+]
+
+
+def elevblad_sources(week: int) -> list[tuple[Path, Path, bool, str]]:
+    """Return (src, dest_stem, teacher, slug) for existing elevblad this week.
+
+    Never invent a ticket. Facit never uses elev-* filenames.
+    """
+    folder = ROOT / "kurs" / "elevblad"
+    found = []
+    for elev in sorted(folder.glob(f"v{week}-*-elev.md")):
+        slug = elev.name[len(f"v{week}-") : -len("-elev.md")]
+        found.append((elev, f"elev-{slug}", False, slug))
+    for facit in sorted(folder.glob(f"v{week}-*-facit.md")):
+        slug = facit.name[len(f"v{week}-") : -len("-facit.md")]
+        found.append((facit, f"larare-{slug}-facit", True, slug))
+    return found
+
+
+def write_week_readme(spec: dict, elev_names: list[str], teacher_names: list[str]) -> None:
+    dest = OUT / spec["dir"] / "README.md"
+    elev_line = ", ".join(f"`{n}.pdf` + `.docx`" for n in elev_names) if elev_names else "ingen (inget elevblad i `kurs/elevblad/`)"
+    teacher_line = ", ".join(f"`{n}.pdf` + `.docx`" for n in teacher_names) if teacher_names else "—"
+    dest.write_text(
+        f"# {spec['vname']} — Classroom\n\n"
+        f"**Elev:** {elev_line}\n\n"
+        f"**Lärare (inte till elev):** {teacher_line}\n\n"
+        f"{spec['blurb']}\n",
+        encoding="utf-8",
+    )
+
+
+def build_week_extend(spec: dict) -> None:
+    week_dir = OUT / spec["dir"]
+    week_dir.mkdir(parents=True, exist_ok=True)
+    v, vname = spec["v"], spec["vname"]
+    elev_stems: list[str] = []
+    teacher_stems: list[str] = []
+
+    for lesson in spec["lessons"]:
+        src = lesson["src"]
+        if not src.exists():
+            raise FileNotFoundError(src)
+        stem = lesson["out"]
+        body, footer, teacher = doc_lektion(
+            src,
+            lesson["m"],
+            lesson["mname"],
+            v,
+            vname,
+            lesson["figure"],
+            lesson["figure_cap"],
+            lesson["footer"],
+        )
+        pdf = week_dir / f"{stem}.pdf"
+        docx = week_dir / f"{stem}.docx"
+        print(f"PDF  {pdf.relative_to(ROOT)}")
+        write_pdf(body, footer, teacher, pdf)
+        write_docx_from_md(
+            src.read_text(encoding="utf-8"),
+            docx,
+            teacher=False,
+            footer=footer,
+            m=lesson["m"],
+            mname=lesson["mname"],
+            v=v,
+            vname=vname,
+            figure=lesson["figure"],
+            figure_cap=lesson["figure_cap"],
+        )
+        print(f"DOCX {docx.relative_to(ROOT)}")
+        elev_stems.append(stem)
+
+    for post in spec["posts"]:
+        src = post["src"]
+        if not src.exists():
+            print(f"SKIP missing post {src.relative_to(ROOT)}")
+            continue
+        stem = post["out"]
+        body, footer, teacher = doc_post(src, post["m"], post["mname"], v, vname, post["footer"])
+        pdf = week_dir / f"{stem}.pdf"
+        docx = week_dir / f"{stem}.docx"
+        print(f"PDF  {pdf.relative_to(ROOT)}")
+        write_pdf(body, footer, teacher, pdf)
+        raw = src.read_text(encoding="utf-8")
+        parts = re.split(r"\n---\n", raw, maxsplit=1)
+        head = parts[0]
+        box = parts[1].strip() if len(parts) > 1 else ""
+        write_docx_from_md(
+            head,
+            docx,
+            teacher=True,
+            footer=footer,
+            m=post["m"],
+            mname=post["mname"],
+            v=v,
+            vname=vname,
+            post_box=box,
+        )
+        print(f"DOCX {docx.relative_to(ROOT)}")
+        teacher_stems.append(stem)
+
+    fallback_m = spec["lessons"][0]["m"] if spec["lessons"] else "M"
+    fallback_name = spec["lessons"][0]["mname"] if spec["lessons"] else ""
+    for src, stem, teacher, slug in elevblad_sources(spec["week"]):
+        if "facit" in stem and stem.startswith("elev-"):
+            raise RuntimeError(f"facit must not use elev-* name: {stem}")
+        footer = (
+            f"{COURSE} · {v} · LÄRARE facit {slug}"
+            if teacher
+            else f"{COURSE} · {v} · elevblad {slug}"
+        )
+        body, footer, teacher_flag = doc_md_sheet(
+            src, fallback_m, fallback_name, v, vname, footer, teacher
+        )
+        pdf = week_dir / f"{stem}.pdf"
+        docx = week_dir / f"{stem}.docx"
+        print(f"PDF  {pdf.relative_to(ROOT)}")
+        write_pdf(body, footer, teacher_flag, pdf)
+        write_docx_from_md(
+            src.read_text(encoding="utf-8"),
+            docx,
+            teacher=teacher_flag,
+            footer=footer,
+            m=fallback_m,
+            mname=fallback_name,
+            v=v,
+            vname=vname,
+        )
+        print(f"DOCX {docx.relative_to(ROOT)}")
+        (teacher_stems if teacher else elev_stems).append(stem)
+
+    write_week_readme(spec, elev_stems, teacher_stems)
+
+
 def build_all():
     (OUT / "vecka-01").mkdir(parents=True, exist_ok=True)
     (OUT / "vecka-02").mkdir(parents=True, exist_ok=True)
@@ -1549,6 +2020,9 @@ def build_all():
     print("DOCX vecka-02/elev-meggerkort.docx")
     print("DOCX vecka-02/larare-meggerkort-facit.docx")
     print("DOCX vecka-02/lektion-2.1-isolering.docx")
+
+    for spec in WEEK_EXTEND:
+        build_week_extend(spec)
 
 
 if __name__ == "__main__":
