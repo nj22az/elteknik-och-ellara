@@ -912,6 +912,79 @@ a.card:hover, .card:hover { border: var(--rule-heavy); }
   flex-wrap: wrap;
 }
 
+
+/* Classroom-ström och pack. OBS-flikar. 0 radius. Bläck på papper. */
+.stream-post,
+.pack-section {
+  border: var(--rule);
+  background: var(--paper);
+  padding: 2.2rem 1rem .9rem;
+  position: relative;
+  margin: 1.2rem 0;
+  color: var(--ink);
+}
+
+.stream-post::before,
+.pack-section::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  padding: 0.15em 0.45em;
+}
+
+.stream-post[data-type="inlagg"]::before { content: "INLÄGG"; }
+.stream-post[data-type="material"]::before { content: "MATERIAL"; }
+.stream-post[data-type="uppgift"]::before { content: "UPPGIFT"; }
+.stream-post[data-type="quiz"]::before { content: "QUIZ"; }
+
+.pack-section[data-pack="elev"]::before { content: "Till Classroom (elever)"; }
+.pack-section[data-pack="larare"]::before { content: "Bara lärare — inte till elever"; }
+.pack-section[data-pack="bildspel"]::before { content: "Bildspel"; }
+.pack-section[data-pack="quiz"]::before { content: "Quiz"; }
+
+.pack-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pack-section .pack-list,
+.stream-post .pack-list {
+  margin: 0;
+}
+
+.pack-list li {
+  margin: 0;
+  border-top: var(--rule);
+}
+
+.pack-list li:first-child { border-top: 0; }
+
+.pack-list a {
+  display: block;
+  padding: .65rem 0;
+  color: var(--ink);
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.pack-list a:hover { font-weight: 600; }
+
+.stream-post .quiz { margin-top: .4rem; }
+.stream-post .quiz .q { margin: .7rem 0; }
+
+.luckan {
+  border: var(--rule);
+  background: var(--paper);
+  padding: 1.2rem 1rem;
+  margin: 0 0 1.4rem;
+}
+
 /* --- Tre skal --- */
 
 [data-shell="elev"] {

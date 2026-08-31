@@ -159,6 +159,60 @@
   ];
   var CAL_IDS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
   var HUB_IDS = ["1", "2", "3", "4", "5", "6", "7", "7b", "8", "8b", "9", "9b"];
+  var PACKS = {
+    "1": {
+      elevFiles: [
+        { label: "Elevblad stötväg (PDF)", href: "kurs/classroom-pack/vecka-01/elev-stotvag.pdf" },
+        { label: "Elevblad stötväg (Word)", href: "kurs/classroom-pack/vecka-01/elev-stotvag.docx" },
+        { label: "Lektion 1.1 Stötar (PDF)", href: "kurs/classroom-pack/vecka-01/lektion-1.1-stotar.pdf" },
+        { label: "Lektion 1.1 Stötar (Word)", href: "kurs/classroom-pack/vecka-01/lektion-1.1-stotar.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad stötväg (PDF)", href: "kurs/classroom-pack/vecka-01/elev-stotvag.pdf" },
+        { label: "Elevblad stötväg (Word)", href: "kurs/classroom-pack/vecka-01/elev-stotvag.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 1.1 Stötar (PDF)", href: "kurs/classroom-pack/vecka-01/lektion-1.1-stotar.pdf" },
+        { label: "Lektion 1.1 Stötar (Word)", href: "kurs/classroom-pack/vecka-01/lektion-1.1-stotar.docx" }
+      ],
+      elevMd: "kurs/elevblad/v1-stotvag-elev.md",
+      larareFiles: [
+        { label: "Facit stötväg (PDF)", href: "kurs/classroom-pack/vecka-01/larare-stotvag-facit.pdf" },
+        { label: "Facit stötväg (Word)", href: "kurs/classroom-pack/vecka-01/larare-stotvag-facit.docx" },
+        { label: "Inlägg vecka 1 (PDF)", href: "kurs/classroom-pack/vecka-01/larare-inlagg-vecka1.pdf" },
+        { label: "Inlägg vecka 1 (Word)", href: "kurs/classroom-pack/vecka-01/larare-inlagg-vecka1.docx" }
+      ],
+      pptx: "pptx/vecka-01.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v1-quiz.md"],
+      inlagg: "kurs/lararhandledning/classroom-v1-vecka1.md"
+    },
+    "2": {
+      elevFiles: [
+        { label: "Elevblad meggerkort (PDF)", href: "kurs/classroom-pack/vecka-02/elev-meggerkort.pdf" },
+        { label: "Elevblad meggerkort (Word)", href: "kurs/classroom-pack/vecka-02/elev-meggerkort.docx" },
+        { label: "Lektion 2.1 Isolering (PDF)", href: "kurs/classroom-pack/vecka-02/lektion-2.1-isolering.pdf" },
+        { label: "Lektion 2.1 Isolering (Word)", href: "kurs/classroom-pack/vecka-02/lektion-2.1-isolering.docx" }
+      ],
+      uppgiftFiles: [
+        { label: "Elevblad meggerkort (PDF)", href: "kurs/classroom-pack/vecka-02/elev-meggerkort.pdf" },
+        { label: "Elevblad meggerkort (Word)", href: "kurs/classroom-pack/vecka-02/elev-meggerkort.docx" }
+      ],
+      materialFiles: [
+        { label: "Lektion 2.1 Isolering (PDF)", href: "kurs/classroom-pack/vecka-02/lektion-2.1-isolering.pdf" },
+        { label: "Lektion 2.1 Isolering (Word)", href: "kurs/classroom-pack/vecka-02/lektion-2.1-isolering.docx" }
+      ],
+      elevMd: "kurs/elevblad/v2-meggerkort-elev.md",
+      larareFiles: [
+        { label: "Facit meggerkort (PDF)", href: "kurs/classroom-pack/vecka-02/larare-meggerkort-facit.pdf" },
+        { label: "Facit meggerkort (Word)", href: "kurs/classroom-pack/vecka-02/larare-meggerkort-facit.docx" },
+        { label: "Inlägg vecka 2 (PDF)", href: "kurs/classroom-pack/vecka-02/larare-inlagg-vecka2.pdf" },
+        { label: "Inlägg vecka 2 (Word)", href: "kurs/classroom-pack/vecka-02/larare-inlagg-vecka2.docx" }
+      ],
+      pptx: "pptx/vecka-02.pptx",
+      quizzes: ["kurs/lararhandledning/classroom-v2-quiz.md"],
+      inlagg: "kurs/lararhandledning/classroom-v2-vecka2.md"
+    }
+  };
   function byId(id) { return document.getElementById(id); }
   function toHex(buf) {
     return Array.from(new Uint8Array(buf)).map(function (b) {
@@ -191,6 +245,136 @@
     return [];
   }
   function hasFacit(path) { return /facit/i.test(path || ""); }
+  function isStudentForbidden(path) {
+    var s = String(path || "");
+    if (hasFacit(s)) return true;
+    if (/larare-/i.test(s)) return true;
+    if (/\.pptx/i.test(s)) return true;
+    return false;
+  }
+  function studentHrefOk(href) {
+    var s = String(href || "");
+    if (!s || s.indexOf("..") !== -1) return false;
+    if (isStudentForbidden(s)) return false;
+    var base = s.split("?")[0].split("#")[0].split("/").pop();
+    if (/^elev-/i.test(base) && /\.(pdf|docx)$/i.test(base)) return true;
+    if (/^lektion-/i.test(base) && /\.(pdf|docx)$/i.test(base)) return true;
+    return false;
+  }
+  function calPad(cal) {
+    cal = String(cal || "").replace(/b$/, "");
+    return cal.length < 2 ? "0" + cal : cal;
+  }
+  function weekPack(cal) {
+    cal = String(cal || "").replace(/b$/, "");
+    var known = PACKS[cal];
+    var quizzes = [];
+    var hubs = calHubs(cal);
+    var i, idx, items, j;
+    for (i = 0; i < hubs.length; i++) {
+      idx = hubIndex(hubs[i]);
+      if (idx < 0) continue;
+      items = WEEKS[idx].items;
+      for (j = 0; j < items.length; j++) {
+        if (classify(items[j]) === "quiz") quizzes.push(items[j].path);
+      }
+    }
+    if (known) {
+      return {
+        ready: true,
+        cal: cal,
+        elevFiles: known.elevFiles,
+        uppgiftFiles: known.uppgiftFiles,
+        materialFiles: known.materialFiles || [],
+        elevMd: known.elevMd || "",
+        larareFiles: known.larareFiles,
+        pptx: known.pptx,
+        quizzes: known.quizzes.slice(),
+        inlagg: known.inlagg
+      };
+    }
+    return {
+      ready: false,
+      cal: cal,
+      elevFiles: [],
+      uppgiftFiles: [],
+      materialFiles: [],
+      elevMd: "",
+      larareFiles: [],
+      pptx: "pptx/vecka-" + calPad(cal) + ".pptx",
+      quizzes: quizzes,
+      inlagg: ""
+    };
+  }
+  function weekHeroHtml(cal) {
+    var mods = calModules(cal);
+    var html = "<div class=\"week-hero\">" + stationHtml("V" + cal, "week-num active");
+    html += "<span class=\"lozenge-row\">";
+    for (var i = 0; i < mods.length; i++) html += lozengeHtml(mods[i].m);
+    if (mods.length > 1) html += "<span class=\"xfer\">byte</span>";
+    html += "</span>";
+    html += "<div><h2>Vecka " + cal + "</h2></div></div>";
+    return html;
+  }
+  function packDl(href, label) {
+    return "<a class=\"pack-download\" href=\"" + href + "\" download target=\"_blank\" rel=\"noopener\">" + esc(label) + "</a>";
+  }
+  function teacherFileListHtml(files) {
+    var html = "<ul class=\"pack-list\">";
+    (files || []).forEach(function (f) {
+      html += "<li>" + packDl(f.href, f.label) + "</li>";
+    });
+    html += "</ul>";
+    return html;
+  }
+  function studentFileListHtml(files) {
+    var html = "<ul class=\"pack-list\">";
+    var n = 0;
+    (files || []).forEach(function (f) {
+      if (!studentHrefOk(f.href)) return;
+      html += "<li>" + packDl(f.href, f.label) + "</li>";
+      n += 1;
+    });
+    html += "</ul>";
+    return n ? html : "<p>Material kommer</p>";
+  }
+  function teacherQuizListHtml(pack) {
+    var html = "<ul class=\"pack-list\">";
+    (pack.quizzes || []).forEach(function (q) {
+      html += "<li><a href=\"#/" + q + "\">Quiz med facit</a></li>";
+    });
+    html += "</ul>";
+    return html;
+  }
+  function teacherWeekPackHtml(cal) {
+    var pack = weekPack(cal);
+    var html = weekHeroHtml(cal);
+    html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
+    if (!pack.ready) {
+      html += "<article class=\"coming\"><h3>Pack kommer</h3><p>PDF och Word saknas. Bildspel och quiz finns.</p></article>";
+      html += "<div class=\"pack-section\" data-pack=\"larare\"><ul class=\"pack-list\">";
+      html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li>";
+      html += "</ul>" + teacherQuizListHtml(pack) + "</div>";
+      return html;
+    }
+    html += "<div class=\"pack-section\" data-pack=\"elev\">" + teacherFileListHtml(pack.elevFiles) + "</div>";
+    html += "<div class=\"pack-section\" data-pack=\"larare\"><ul class=\"pack-list\">";
+    html += "<li>" + packDl(pack.pptx, "Bildspel, PowerPoint") + "</li>";
+    (pack.larareFiles || []).forEach(function (f) {
+      html += "<li>" + packDl(f.href, f.label) + "</li>";
+    });
+    html += "</ul>" + teacherQuizListHtml(pack) + "</div>";
+    return html;
+  }
+  function studentPostText(md) {
+    var s = String(md || "");
+    var parts = s.split(/\n---\s*\n/);
+    if (parts.length > 1) s = parts.slice(1).join("\n---\n");
+    return stripFacit(s);
+  }
+  function typeTabsHtml() {
+    return "<p class=\"type-tabs\"><span class=\"post-type\">INLÄGG</span><span class=\"post-type\">MATERIAL</span><span class=\"post-type\">UPPGIFT</span><span class=\"post-type\">QUIZ</span></p>";
+  }
   function isClassroomPost(path) {
     path = path || "";
     if (path.indexOf("-quiz.md") !== -1 || path.indexOf("-slides.md") !== -1) return false;
@@ -228,7 +412,11 @@
   }
   function scrubHtml(html) {
     if (isTeacher()) return String(html || "");
-    return String(html || "").replace(/href=("|')[^"']*facit[^"']*("|')/gi, "href=\"#/\"");
+    var s = String(html || "");
+    s = s.replace(/href=("|')[^"']*facit[^"']*("|')/gi, "href=\"#/\"");
+    s = s.replace(/href=("|')[^"']*larare-[^"']*("|')/gi, "href=\"#/\"");
+    s = s.replace(/href=("|')[^"']*\.pptx[^"']*("|')/gi, "href=\"#/\"");
+    return s;
   }
   function mdHtml(md, path) {
     var src = rewriteMd(md, path || "");
@@ -351,27 +539,35 @@
   }
   function okPath(path) {
     if (!path || path.indexOf("..") !== -1) return false;
-    if (path.slice(-3).toLowerCase() !== ".md") return false;
-    if (path.indexOf("kurs/") !== 0 && path.indexOf("bok/") !== 0) return false;
     if (hasFacit(path) && !isTeacher()) return false;
+    if (isStudent() && isStudentForbidden(path)) return false;
+    var lower = path.toLowerCase();
+    var isMd = lower.slice(-3) === ".md";
+    var isElevPack = /(^|\/)elev-[^/]+\.(pdf|docx)$/i.test(path);
+    var isLektionPack = /(^|\/)lektion-[^/]+\.(pdf|docx)$/i.test(path);
     if (isBook()) {
-      if (path === "bok/kapitellista-v2.md") return true;
-      return path.indexOf("bok/") === 0 && (!!findItem(path) || !!chapterOf(path));
+      if (!isMd || path.indexOf("bok/") !== 0) return false;
+      if (path === "bok/kapitellista-v2.md" || path === "bok/forord-vid-luckan.md") return true;
+      return !!findItem(path) || !!chapterOf(path);
     }
-    if (path === "bok/kapitellista-v2.md") return !isBook() || true;
     if (isStudent()) {
-      if (isClassroomPost(path)) return false;
+      if (isElevPack || isLektionPack) return true;
+      if (!isMd) return false;
+      if (path.indexOf("kurs/") !== 0) return false;
       if (path === "kurs/labbdag-v2.md") return true;
       if (path === "kurs/prov/skriftligt-prov-elev.md") return true;
       if (path === "kurs/kurskarta/kurskarta-v2.md") return true;
-      if (path === "bok/kapitellista-v2.md") return true;
+      if (isClassroomPost(path)) return true;
       var it = findItem(path);
       if (!it) return false;
       var k = classify(it);
-      return k === "lektion" || k === "bok" || k === "slides" || k === "quiz";
+      return k === "lektion" || k === "quiz";
     }
     if (isTeacher()) {
+      if (!isMd) return false;
+      if (path.indexOf("kurs/") !== 0 && path.indexOf("bok/") !== 0) return false;
       if (path === "bok/kapitellista-v2.md") return true;
+      if (path === "bok/forord-vid-luckan.md") return true;
       if (path === "kurs/prov/skriftligt-prov-facit.md") return true;
       if (path === "kurs/labbdag-v2.md") return true;
       return !!findItem(path);
@@ -477,10 +673,8 @@
   function navItems() {
     if (isTeacher()) {
       return [
-        { href: "#/", nav: "vecka", label: "Vecka" },
-        { href: "#/korschema", nav: "korschema", label: "Körschema" },
-        { href: "#/facit", nav: "facit", label: "Facit" },
-        { href: "#/labbdag", nav: "labbdag", label: "Labbdag" }
+        { href: "#/", nav: "pack", label: "Pack" },
+        { href: "#/facit", nav: "facit", label: "Facit" }
       ];
     }
     if (isBook()) {
@@ -492,7 +686,6 @@
     return [
       { href: "#/", nav: "start", label: "Start" },
       { href: "#/kursen", nav: "kursen", label: "Kursen" },
-      { href: "#/bok", nav: "bok", label: "Boken" },
       { href: "#/labbdag", nav: "labbdag", label: "Labbdag" },
       { href: "#/prov", nav: "prov", label: "Prov" }
     ];
@@ -569,6 +762,7 @@
     if (mods.length > 1) html += "<span class=\"xfer\">byte</span>";
     html += "</span>";
     html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
+    html += "<p class=\"path-line\">INLÄGG · MATERIAL · UPPGIFT · QUIZ</p>";
     html += "</a></article>";
     return html;
   }
@@ -583,7 +777,7 @@
     if (mods.length > 1) html += "<span class=\"xfer\">byte</span>";
     html += "</span>";
     html += "<p class=\"path-line\">" + esc(weekNames(cal)) + "</p>";
-    html += "<p class=\"path-line\">Handledning · Bildspel · Quiz · Lektion · Kapitel · G–VG–IG</p>";
+    html += "<p class=\"path-line\">Pack · Bildspel · Quiz</p>";
     html += "</a></article>";
     return html;
   }
@@ -602,10 +796,10 @@
     var html = "";
     html += "<p class=\"kicker\">YH-kurs · Distans</p>";
     html += "<h2>Elteknik och ellära</h2>";
-    html += "<p class=\"lead\">Nio stationer V1–V9. Tolv linjer M01–M12. 45 poäng. En fysisk labbdag efter V8.</p>";
+    html += "<p class=\"lead\">Classroom-ström. Nio stationer V1–V9. En fysisk labbdag efter V8. Facit ligger inte här.</p>";
     html += "<div class=\"cta-row\">";
     html += "<a class=\"cta\" href=\"#/vecka/1\">" + stationHtml("V1", "week-num") + "<span><strong>Starta V1</strong><span>Elsäkerhet och stötar</span></span></a>";
-    html += "<a class=\"cta\" href=\"#/bok\"><strong>Läs boken</strong><span>Tolv kapitel som stöd</span></a>";
+    html += "<a class=\"cta\" href=\"#/labbdag\"><strong>Labbdag</strong><span>Efter vecka 8</span></a>";
     html += "</div>";
     html += weekGridHtml();
     html += "<article class=\"card ticket\" style=\"margin-top:1.2rem\"><p class=\"kicker\">Biljett</p><h3>Labbdag</h3><p class=\"path-line\">Efter vecka 8. En fysisk dag. Titta, inte live-wire.</p><p class=\"mini-links\"><a href=\"#/labbdag\">Öppna biljetten</a></p></article>";
@@ -617,7 +811,7 @@
     setNav("kursen");
     setBar("");
     var html = "<p class=\"kicker\">Kursen</p><h2>Nio stationer</h2>";
-    html += "<p class=\"lead\">Varje station: lektion, kapitel, bildspel, quiz.</p>";
+    html += "<p class=\"lead\">Varje station: inlägg, material, uppgift, quiz.</p>";
     html += weekGridHtml();
     html += "<p class=\"toc-extra\"><a href=\"#/kurs/kurskarta/kurskarta-v2.md\">Kurskarta</a></p>";
     setMain(html, true);
@@ -676,61 +870,89 @@
     else { nextH = isTeacher() ? "#/facit" : "#/prov"; nextL = isTeacher() ? "Facit" : "Prov"; }
     return turnHtml(prevH, prevL, nextH, nextL);
   }
-  function showWeek(id) {
-    setShell(isTeacher() ? "larare" : "elev");
-    var isB = /b$/.test(id);
-    var cal = String(id).replace(/b$/, "");
-    if (CAL_IDS.indexOf(cal) === -1 && hubIndex(id) === -1) { showBlocked(); return; }
-    markVisited("vecka/" + id);
-    setNav(isTeacher() ? "vecka" : "kursen");
-    setBar("");
-    var html = "<p class=\"kicker\">" + (isTeacher() ? "Så här kör du veckan" : "Kursen") + "</p>";
-    var hubs;
-    if (isB || hubIndex(id) !== -1 && calHubs(cal).length === 1) {
-      var idx = hubIndex(id);
-      if (idx < 0) { showBlocked(); return; }
-      var info = MODULES[idx];
-      html += "<div class=\"week-hero\">" + stationHtml("V" + info.cal, "week-num active") + lozengeHtml(info.m) + "<div><h2>" + esc(info.name) + "</h2></div></div>";
-      html += "<p class=\"lead\">" + (isTeacher() ? "Handledning, talk track, quiz med facit, elevlektion, kapitel och G–VG–IG." : "Lektion · kapitel · bildspel · quiz.") + "</p>";
-      html += modulePathHtml(idx);
-      html += hubTurn(id);
-    } else {
-      hubs = calHubs(cal);
-      if (!hubs.length) { showBlocked(); return; }
-      html += "<div class=\"week-hero\">" + stationHtml("V" + cal, "week-num active");
-      html += "<span class=\"lozenge-row\">";
-      for (var hi = 0; hi < hubs.length; hi++) html += lozengeHtml(MODULES[hubIndex(hubs[hi])].m);
-      if (hubs.length > 1) html += "<span class=\"xfer\">byte</span>";
-      html += "</span>";
-      html += "<div><h2>Vecka " + cal + "</h2></div></div>";
-      html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
-      if (cal === "9" && isStudent()) html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
-      if (cal === "8") html += "<p class=\"mini-links\"><a href=\"#/labbdag\">Labbdag efter vecka 8</a></p>";
-      for (var i = 0; i < hubs.length; i++) html += modulePathHtml(hubIndex(hubs[i]));
+  function showStudentStream(cal) {
+    var pack = weekPack(cal);
+    var html = "<p class=\"kicker\">Classroom</p>";
+    html += weekHeroHtml(cal);
+    html += "<p class=\"lead\">" + esc(weekNames(cal)) + "</p>";
+    if (cal === "9") html += "<p class=\"mini-links\"><a href=\"#/prov\">Skriftligt prov</a></p>";
+    if (cal === "8") html += "<p class=\"mini-links\"><a href=\"#/labbdag\">Labbdag efter vecka 8</a></p>";
+    if (!pack.ready) {
+      html += "<article class=\"stream-post\" data-type=\"inlagg\"><p>Pack kommer.</p></article>";
       html += calTurn(cal);
+      setMain(html, true);
+      return;
     }
+    html += "<div id=\"stream-root\"></div>";
+    html += calTurn(cal);
     setMain(html, true);
+    var inlaggP = pack.inlagg
+      ? fetch(pack.inlagg).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; })
+      : Promise.resolve("");
+    var quizPath = pack.quizzes && pack.quizzes[0] ? pack.quizzes[0] : "";
+    var quizP = quizPath
+      ? fetch(quizPath).then(function (r) { return r.ok ? r.text() : ""; }).catch(function () { return ""; })
+      : Promise.resolve("");
+    Promise.all([inlaggP, quizP]).then(function (parts) {
+      var root = byId("stream-root");
+      if (!root) return;
+      var out = "";
+      var inlaggMd = stripFacit(parts[0] || "");
+      out += "<article class=\"stream-post\" data-type=\"inlagg\">";
+      out += inlaggMd ? mdHtml(inlaggMd, pack.inlagg) : "<p>Pack kommer.</p>";
+      out += "</article>";
+      out += "<article class=\"stream-post\" data-type=\"material\">";
+      out += studentFileListHtml(pack.elevFiles);
+      out += "</article>";
+      out += "<article class=\"stream-post\" data-type=\"uppgift\">";
+      out += studentFileListHtml(pack.uppgiftFiles);
+      out += "</article>";
+      var quizMd = parts[1] || "";
+      var quiz = parseQuiz(quizMd);
+      out += "<article class=\"stream-post\" data-type=\"quiz\">";
+      if (quiz) out += renderQuiz(quiz, quizPath);
+      else out += quizMd ? mdHtml(stripFacit(quizMd), quizPath) : "<p>Pack kommer.</p>";
+      out += "</article>";
+      root.innerHTML = out;
+      if (quiz) bindQuiz();
+    });
+  }
+  function showWeek(id) {
+    var cal = String(id).replace(/b$/, "");
+    if (CAL_IDS.indexOf(cal) === -1) { showBlocked(); return; }
+    markVisited("vecka/" + id);
+    if (isTeacher()) {
+      setShell("larare");
+      setNav("pack");
+      setBar("");
+      var th = "<p class=\"kicker\">Pack</p>";
+      th += teacherWeekPackHtml(cal);
+      th += calTurn(cal);
+      setMain(th, true);
+      return;
+    }
+    setShell("elev");
+    setNav("kursen");
+    setBar("");
+    showStudentStream(cal);
   }
   function showTeacherHome() {
     setShell("larare");
-    setNav("vecka");
+    setNav("pack");
     setBar("");
     var html = "";
     html += "<p class=\"kicker\">Lärare</p>";
-    html += "<h2>Så här kör du veckan</h2>";
-    html += "<p class=\"lead\">Nio stationer V1–V9 på distans. Stam = linjer M01–M12. Klistra Classroom-inlägget rakt in i Google Classroom. Bildspelets notes är talk track. En fysisk labbdag efter V8.</p>";
-    html += "<ul class=\"how-list\">";
-    html += "<li>Öppna veckan. Läs handledningen. Klistra inlägget i Classroom.</li>";
-    html += "<li>Kör 16 slides. Säg det som står under Notes.</li>";
-    html += "<li>Quiz med facit i lärarpanelen. Inte i elevenkäten.</li>";
-    html += "<li>Elevlektion och matchande bokkapitel som stöd.</li>";
-    html += "<li>Betyg IG/G/VG. 1 MΩ är upplysning, inte skall.</li>";
-    html += "</ul>";
+    html += "<h2>Pack</h2>";
+    html += "<p class=\"lead\">Ladda ner till Classroom. Klistra inlägget. Facit och lärarfiler går inte till elever.</p>";
     html += "<div class=\"cta-row\">";
-    html += "<a class=\"cta\" href=\"#/vecka/1\">" + stationHtml("V1", "week-num") + "<span><strong>Kör V1</strong><span>Elsäkerhet och stötar</span></span></a>";
-    html += "<a class=\"cta\" href=\"#/korschema\"><strong>Körschema</strong><span>Nio stationer + labbdag</span></a>";
+    html += "<a class=\"cta\" href=\"#/vecka/1\">" + stationHtml("V1", "week-num") + "<span><strong>Pack V1</strong><span>Elsäkerhet och stötar</span></span></a>";
+    html += "<a class=\"cta\" href=\"#/facit\"><strong>Facit</strong><span>Prov och quiz</span></a>";
     html += "</div>";
     html += weekGridHtml();
+    var wi;
+    for (wi = 0; wi < CAL_IDS.length; wi++) {
+      html += "<section class=\"pack-week\">" + teacherWeekPackHtml(CAL_IDS[wi]) + "</section>";
+    }
     html += "<p class=\"foot-note\">Labbdag efter vecka 8. Skriftligt prov i vecka 9. Facit bara här.</p>";
     setMain(html, true);
   }
@@ -793,7 +1015,7 @@
     var info = MODULES[idx];
     var by = {};
     WEEKS[idx].items.forEach(function (it) { by[classify(it)] = it; });
-    setNav("vecka");
+    setNav("pack");
     setBar("<div class=\"bar-inner\"><span>" + stationHtml("V" + info.cal) + " " + lozengeHtml(info.m) + " G–VG–IG</span></div>");
     function paint(grades, facitNote) {
       var html = "<p class=\"kicker\">Säg så här</p><h2>" + esc(info.name) + "</h2>";
@@ -826,14 +1048,26 @@
     setShell("bok");
     setNav(isBook() ? (asCover ? "omslag" : "innehall") : "bok");
     setBar("");
-    var ch = allChapters();
-    var html = "";
     if (isBook() && asCover) {
-      html += "<section class=\"cover\"><p class=\"kicker\">Bok</p><h2>Elteknik och ellära</h2><p class=\"sub\">Fartyg och automation</p></section>";
-    } else {
-      html += "<p class=\"kicker\">Boken</p><h2>Tolv kapitel</h2><p class=\"lead\">En figur per kapitel. Stöd till kursen.</p>";
+      var cover = "<section class=\"cover\"><p class=\"kicker\">Bok</p><h2>Elteknik och ellära</h2><p class=\"sub\">Fartyg och automation</p></section>";
+      cover += "<div id=\"luckan\" class=\"luckan\"></div>";
+      setMain(cover);
+      fetch("bok/forord-vid-luckan.md").then(function (r) { return r.ok ? r.text() : ""; }).then(function (md) {
+        var el = byId("luckan");
+        if (!el) return;
+        var body = String(md || "");
+        var cut = body.lastIndexOf("\n---\n");
+        if (cut !== -1) body = body.slice(0, cut);
+        el.innerHTML = mdHtml(body, "bok/forord-vid-luckan.md");
+      }).catch(function () {
+        var el = byId("luckan");
+        if (el) el.innerHTML = "<p class=\"page-err\">Kunde inte läsa sidan.</p>";
+      });
+      return;
     }
-    html += "<p class=\"toc-extra\"><a href=\"#/bok/kapitellista-v2.md\">Kapitellista</a></p>";
+    var ch = allChapters();
+    var html = "<p class=\"kicker\">Innehåll</p><h2>Tolv kapitel</h2>";
+    html += "<p class=\"lead\">M01–M12. En figur per kapitel.</p>";
     html += "<ol class=\"chapter-list\">";
     for (var i = 0; i < ch.length; i++) {
       var c = ch[i];
@@ -842,7 +1076,7 @@
       html += lozengeHtml(MODULES[c.weekIdx].m);
       html += "<span class=\"n\">" + c.n + "</span>";
       html += "<img class=\"thumb\" src=\"" + c.figure + "\" alt=\"" + esc(c.caption) + "\">";
-      html += "<span class=\"step-body\"><span class=\"step-k\">Kapitel " + c.n + "</span><h3>" + esc(c.title) + done + "</h3></span>";
+      html += "<span class=\"step-body\"><span class=\"step-k\">" + esc(MODULES[c.weekIdx].m) + "</span><h3>" + esc(c.title) + done + "</h3></span>";
       html += "</a></li>";
     }
     html += "</ol>";
@@ -885,9 +1119,9 @@
       var chapBar = chapterOf(path);
       if (chapBar) {
         var bmod = MODULES[chapBar.weekIdx];
-        return "<div class=\"bar-inner\"><span>" + stationHtml("V" + chapBar.cal) + " " + lozengeHtml(bmod.m) + " " + esc(bmod.chap) + "</span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></div>";
+        return "<div class=\"bar-inner\"><span>" + lozengeHtml(bmod.m) + " " + esc(bmod.chap) + "</span><a href=\"" + (isBook() ? "#/innehall" : "#/") + "\">Innehåll</a></div>";
       }
-      return "<div class=\"bar-inner\"><span><a href=\"" + (isBook() ? "#/innehall" : "#/bok") + "\">Boken</a></span></div>";
+      return "<div class=\"bar-inner\"><span><a href=\"" + (isBook() ? "#/innehall" : "#/") + "\">Innehåll</a></span></div>";
     }
     return "";
   }
@@ -980,14 +1214,14 @@
   function showDoc(path) {
     if (!okPath(path)) { showBlocked(); return; }
     if (path.indexOf("bok/") === 0) setShell("bok");
-    else if (path.indexOf("lararhandledning") !== -1 || path.indexOf("-slides.md") !== -1) setShell("larare");
-    else setShell("elev");
+    else if (isTeacher() && (path.indexOf("lararhandledning") !== -1 || path.indexOf("-slides.md") !== -1)) setShell("larare");
+    else setShell(isTeacher() ? "larare" : "elev");
     if (isBook()) setNav("innehall");
-    else if (path.indexOf("bok/") === 0) setNav("bok");
-    else if (path.indexOf("labbdag") !== -1) setNav("labbdag");
+    else if (path.indexOf("bok/") === 0) setNav(isTeacher() ? "pack" : "kursen");
+    else if (path.indexOf("labbdag") !== -1) setNav(isTeacher() ? "pack" : "labbdag");
     else if (hasFacit(path)) setNav("facit");
     else if (path.indexOf("prov") !== -1) setNav(isTeacher() ? "facit" : "prov");
-    else setNav(isTeacher() ? "vecka" : "kursen");
+    else setNav(isTeacher() ? "pack" : "kursen");
     setBar(courseBarFor(path));
     fetch(path).then(function (res) {
       if (!res.ok) throw new Error(String(res.status));
@@ -1000,7 +1234,7 @@
       var fig = chap || (item && item.figure ? item : null);
       if (chap) {
         var cmod = MODULES[chap.weekIdx];
-        html += "<p class=\"kicker chap-mark\">" + lozengeHtml(cmod.m) + " " + stationHtml("V" + chap.cal) + " " + esc(cmod.chap) + "</p>";
+        html += "<p class=\"kicker chap-mark\">" + lozengeHtml(cmod.m) + (isBook() ? "" : (" " + stationHtml("V" + chap.cal))) + " " + esc(cmod.chap) + "</p>";
       }
       if (fig && fig.figure) {
         html += "<figure class=\"figure\"><img src=\"" + fig.figure + "\" alt=\"" + esc(fig.caption || "") + "\">";
@@ -1049,6 +1283,7 @@
     applyChrome();
     var raw = hashPath();
     if (hasFacit(raw) && !isTeacher()) { showBlocked(); return; }
+    if (isStudent() && isStudentForbidden(raw)) { showBlocked(); return; }
     if (isBook()) {
       if (!raw) { showBookHome(true); return; }
       if (raw === "innehall" || raw === "bok") { showBookHome(false); return; }
@@ -1056,7 +1291,7 @@
       showBlocked(); return;
     }
     if (isTeacher()) {
-      if (!raw) { showTeacherHome(); return; }
+      if (!raw || raw === "pack") { showTeacherHome(); return; }
       if (raw === "korschema") { showKorschema(); return; }
       if (raw === "facit") { showFacitHub(); return; }
       if (raw === "labbdag") { showLab(); return; }
@@ -1070,11 +1305,12 @@
     }
     if (!raw) { showStudentHome(); return; }
     if (raw === "kursen") { showStudentCourse(); return; }
-    if (raw === "bok" || raw === "innehall") { showBookHome(false); return; }
+    if (raw === "bok" || raw === "innehall") { showBlocked(); return; }
     if (raw === "labbdag") { showLab(); return; }
     if (raw === "prov") { showProv(); return; }
     var sw = raw.match(/^vecka\/(\d+b?)$/);
     if (sw) { showWeek(sw[1]); return; }
+    if (okPath(raw) && /\.(pdf|docx|pptx)$/i.test(raw)) { showBlocked(); return; }
     if (okPath(raw)) { showDoc(raw); return; }
     showBlocked();
   }
@@ -1139,6 +1375,11 @@
       var decoded = href;
       try { decoded = decodeURIComponent(href); } catch (err2) {}
       if (!isTeacher() && (hasFacit(href) || hasFacit(decoded))) {
+        e.preventDefault();
+        showBlocked();
+        return;
+      }
+      if (isStudent() && (isStudentForbidden(href) || isStudentForbidden(decoded))) {
         e.preventDefault();
         showBlocked();
       }
